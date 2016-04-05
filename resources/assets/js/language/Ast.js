@@ -86,7 +86,8 @@ class Ast {
     }
 
     /**
-     * The string representation of the Ast where this node is the root.
+     * The string representation of the Ast where this 
+     * node is the root.
      * @return {string} 
      */
     toTreeString() {
@@ -102,6 +103,16 @@ class Ast {
         if (!this.isNull())
             tree += ')';
         return tree;
+    }
+
+    /**
+     * Calls the given visitor with the node, based
+     * on the node's type.
+     * @param  {Visitor} visitor
+     * @return {null}         
+     */
+    visit(visitor) {
+        return visitor[this.getNodeType()].call(visitor, this);
     }
 }
 

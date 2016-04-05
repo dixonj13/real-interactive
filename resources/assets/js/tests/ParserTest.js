@@ -777,7 +777,6 @@ ParserTest.prototype.it_can_change_precedence_of_set_operations_with_parenthesiz
     expected.addChild(new Ast(this.lexer.types.ID, 'r6'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    console.log(actual.toTreeString());
 };
 
 
