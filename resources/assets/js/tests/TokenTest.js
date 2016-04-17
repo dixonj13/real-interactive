@@ -1,10 +1,10 @@
-import * as TestCase from './TestCase.js';
+import { TestCase } from './TestCase.js';
 import Token from '../language/Token.js';
 
 /** Tests the Token class. */
 export var TokenTest = function() {};
 
-TokenTest.prototype = new TestCase.TestCase();
+TokenTest.prototype = new TestCase();
 
 TokenTest.prototype.setUp = function() {
     this.token = new Token('FOO', 'bar');

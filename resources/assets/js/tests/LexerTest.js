@@ -1,11 +1,12 @@
-import * as TestCase from './TestCase.js';
-import Lexer from '../language/Lexer.js';
-import Token from '../language/Token.js';
+import { TestCase } from './TestCase';
+import Lexer from '../language/Lexer';
+import Token from '../language/Token';
+import { tokenTypes } from '../language/TokenTypes';
 
 /** Tests the Lexer class. */
 export var LexerTest = function() {};
 
-LexerTest.prototype = new TestCase.TestCase();
+LexerTest.prototype = new TestCase();
 
 LexerTest.prototype.setUp = function() {
     this.lexer = new Lexer('foo');
@@ -28,36 +29,37 @@ LexerTest.prototype.it_has_a_character_starting_at_the_first_character_in_the_te
 };
 
 LexerTest.prototype.it_has_a_finite_list_of_available_token_types = function() {
-    this.assertStrictlyEqual('EOF', this.lexer.types.EOF);
-    this.assertStrictlyEqual('ID', this.lexer.types.ID);
-    this.assertStrictlyEqual('NUMBER', this.lexer.types.NUMBER);
-    this.assertStrictlyEqual('STRING', this.lexer.types.STRING);
-    this.assertStrictlyEqual('ATTR', this.lexer.types.ATTR);
-    this.assertStrictlyEqual('LIST', this.lexer.types.LIST);
-    this.assertStrictlyEqual('(', this.lexer.types.LPAREN);
-    this.assertStrictlyEqual(')', this.lexer.types.RPAREN);
-    this.assertStrictlyEqual('[', this.lexer.types.LBRACK);
-    this.assertStrictlyEqual(']', this.lexer.types.RBRACK);
-    this.assertStrictlyEqual('DOT', this.lexer.types.DOT);
-    this.assertStrictlyEqual('COMMA', this.lexer.types.COMMA);
-    this.assertStrictlyEqual('NJOIN', this.lexer.types.NJOIN);
-    this.assertStrictlyEqual('SELECT', this.lexer.types.SELECT);
-    this.assertStrictlyEqual('PROJECT', this.lexer.types.PROJECT);
-    this.assertStrictlyEqual('RENAME', this.lexer.types.RENAME);
-    this.assertStrictlyEqual('UNION', this.lexer.types.UNION);
-    this.assertStrictlyEqual('ISECT', this.lexer.types.ISECT);
-    this.assertStrictlyEqual('DIFF', this.lexer.types.DIFF);
-    this.assertStrictlyEqual('CPROD', this.lexer.types.CPROD);
-    this.assertStrictlyEqual('AND', this.lexer.types.AND);
-    this.assertStrictlyEqual('OR', this.lexer.types.OR);
-    this.assertStrictlyEqual('NOT', this.lexer.types.NOT);
-    this.assertStrictlyEqual('MINUS', this.lexer.types.MINUS);
-    this.assertStrictlyEqual('GRTR', this.lexer.types.GRTR);
-    this.assertStrictlyEqual('GEQ', this.lexer.types.GEQ);
-    this.assertStrictlyEqual('EQL', this.lexer.types.EQL);
-    this.assertStrictlyEqual('NEQ', this.lexer.types.NEQ);
-    this.assertStrictlyEqual('LESS', this.lexer.types.LESS);
-    this.assertStrictlyEqual('LEQ', this.lexer.types.LEQ);
+    this.assertStrictlyEqual('EOF', tokenTypes.EOF);
+    this.assertStrictlyEqual('RELATION', tokenTypes.RELATION);
+    this.assertStrictlyEqual('ID', tokenTypes.ID);
+    this.assertStrictlyEqual('NUMBER', tokenTypes.NUMBER);
+    this.assertStrictlyEqual('STRING', tokenTypes.STRING);
+    this.assertStrictlyEqual('ATTR', tokenTypes.ATTR);
+    this.assertStrictlyEqual('LIST', tokenTypes.LIST);
+    this.assertStrictlyEqual('(', tokenTypes.LPAREN);
+    this.assertStrictlyEqual(')', tokenTypes.RPAREN);
+    this.assertStrictlyEqual('[', tokenTypes.LBRACK);
+    this.assertStrictlyEqual(']', tokenTypes.RBRACK);
+    this.assertStrictlyEqual('DOT', tokenTypes.DOT);
+    this.assertStrictlyEqual('COMMA', tokenTypes.COMMA);
+    this.assertStrictlyEqual('NJOIN', tokenTypes.NJOIN);
+    this.assertStrictlyEqual('SELECT', tokenTypes.SELECT);
+    this.assertStrictlyEqual('PROJECT', tokenTypes.PROJECT);
+    this.assertStrictlyEqual('RENAME', tokenTypes.RENAME);
+    this.assertStrictlyEqual('UNION', tokenTypes.UNION);
+    this.assertStrictlyEqual('ISECT', tokenTypes.ISECT);
+    this.assertStrictlyEqual('DIFF', tokenTypes.DIFF);
+    this.assertStrictlyEqual('CPROD', tokenTypes.CPROD);
+    this.assertStrictlyEqual('AND', tokenTypes.AND);
+    this.assertStrictlyEqual('OR', tokenTypes.OR);
+    this.assertStrictlyEqual('NOT', tokenTypes.NOT);
+    this.assertStrictlyEqual('MINUS', tokenTypes.MINUS);
+    this.assertStrictlyEqual('GRTR', tokenTypes.GRTR);
+    this.assertStrictlyEqual('GEQ', tokenTypes.GEQ);
+    this.assertStrictlyEqual('EQL', tokenTypes.EQL);
+    this.assertStrictlyEqual('NEQ', tokenTypes.NEQ);
+    this.assertStrictlyEqual('LESS', tokenTypes.LESS);
+    this.assertStrictlyEqual('LEQ', tokenTypes.LEQ);
 };
 
 LexerTest.prototype.it_can_consume_incrementing_the_position_and_getting_the_next_character = function() {

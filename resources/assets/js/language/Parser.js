@@ -1,6 +1,7 @@
 import Token from './Token.js';
 import Lexer from './Lexer.js';
 import Ast from './Ast.js';
+import { tokenTypes } from './TokenTypes.js';
 
 class Parser {
 
@@ -42,15 +43,15 @@ class Parser {
 
     number() {
         var node, token;
-        if (this.lookahead.type === this.lexer.types.MINUS) {
-            this.match(this.lexer.types.MINUS);
-            node = new Ast(this.lexer.types.MINUS);
+        if (this.lookahead.type === tokenTypes.MINUS) {
+            this.match(tokenTypes.MINUS);
+            node = new Ast(tokenTypes.MINUS);
             token = this.lookahead;
-            this.match(this.lexer.types.NUMBER);
+            this.match(tokenTypes.NUMBER);
             node.addChild(new Ast(token));
         } else {
             token = this.lookahead;
-            this.match(this.lexer.types.NUMBER);
+            this.match(tokenTypes.NUMBER);
             node = new Ast(token);
         }
 
@@ -60,13 +61,13 @@ class Parser {
     attribute() {
         var node;
         var token = this.lookahead;
-        this.match(this.lexer.types.ID);
+        this.match(tokenTypes.ID);
         node = new Ast(token);
-        if (this.lookahead.type === this.lexer.types.DOT) {
-            this.match(this.lexer.types.DOT);
+        if (this.lookahead.type === tokenTypes.DOT) {
+            this.match(tokenTypes.DOT);
             token = this.lookahead;
-            this.match(this.lexer.types.ID);
-            var parent = new Ast(this.lexer.types.ATTR);
+            this.match(tokenTypes.ID);
+            var parent = new Ast(tokenTypes.ATTR);
             parent.addChild(node);
             parent.addChild(new Ast(token));
             node = parent;
@@ -75,10 +76,10 @@ class Parser {
     }
 
     attributes() {
-        var node = new Ast(this.lexer.types.LIST);
+        var node = new Ast(tokenTypes.LIST);
         node.addChild(this.attribute());
-        while (this.lookahead.type === this.lexer.types.COMMA) {
-            this.match(this.lexer.types.COMMA);
+        while (this.lookahead.type === tokenTypes.COMMA) {
+            this.match(tokenTypes.COMMA);
             node.addChild(this.attribute());
         }
         return node;
@@ -86,44 +87,45 @@ class Parser {
 
     string() {
         var token = this.lookahead;
-        this.match(this.lexer.types.STRING);
+        this.match(tokenTypes.STRING);
         return new Ast(token);
     }
 
     comparable() {
-        if (this.lookahead.type === this.lexer.types.ID)
+        if (this.lookahead.type === tokenTypes.ID)
             return this.attribute();
-        if (this.lookahead.type === this.lexer.types.NUMBER)
+        if (this.lookahead.type === tokenTypes.MINUS ||
+            this.lookahead.type === tokenTypes.NUMBER)
             return this.number();
-        if (this.lookahead.type === this.lexer.types.STRING)
+        if (this.lookahead.type === tokenTypes.STRING)
             return this.string();
         throw new Error('Expected comparable value, but found ' + this.lookahead.toString());
     }
 
     compareOp() {
         var token = this.lookahead;
-        if (this.lookahead.type === this.lexer.types.LESS) {
-            this.match(this.lexer.types.LESS);
+        if (this.lookahead.type === tokenTypes.LESS) {
+            this.match(tokenTypes.LESS);
             return new Ast(token);
         }
-        if (this.lookahead.type === this.lexer.types.LEQ) {
-            this.match(this.lexer.types.LEQ);
+        if (this.lookahead.type === tokenTypes.LEQ) {
+            this.match(tokenTypes.LEQ);
             return new Ast(token);
         }
-        if (this.lookahead.type === this.lexer.types.GRTR) {
-            this.match(this.lexer.types.GRTR);
+        if (this.lookahead.type === tokenTypes.GRTR) {
+            this.match(tokenTypes.GRTR);
             return new Ast(token);
         }
-        if (this.lookahead.type === this.lexer.types.GEQ) {
-            this.match(this.lexer.types.GEQ);
+        if (this.lookahead.type === tokenTypes.GEQ) {
+            this.match(tokenTypes.GEQ);
             return new Ast(token);
         }
-        if (this.lookahead.type === this.lexer.types.EQL) {
-            this.match(this.lexer.types.EQL);
+        if (this.lookahead.type === tokenTypes.EQL) {
+            this.match(tokenTypes.EQL);
             return new Ast(token);
         }
-        if (this.lookahead.type === this.lexer.types.NEQ) {
-            this.match(this.lexer.types.NEQ);
+        if (this.lookahead.type === tokenTypes.NEQ) {
+            this.match(tokenTypes.NEQ);
             return new Ast(token);
         }
         throw new Error('Expected comparison operator, but found ' + this.lookahead.toString());
@@ -140,22 +142,22 @@ class Parser {
 
     operand() {
         var node;
-        if (this.lookahead.type === this.lexer.types.NOT) {
+        if (this.lookahead.type === tokenTypes.NOT) {
             node = new Ast(this.lookahead);
-            this.match(this.lexer.types.NOT);
-            this.match(this.lexer.types.LPAREN);
+            this.match(tokenTypes.NOT);
+            this.match(tokenTypes.LPAREN);
             var disjunction = this.disjunction();
-            this.match(this.lexer.types.RPAREN);
+            this.match(tokenTypes.RPAREN);
             node.addChild(disjunction);
             return node;
         }
-        if (this.lookahead.type === this.lexer.types.LPAREN) {
-            this.match(this.lexer.types.LPAREN);
+        if (this.lookahead.type === tokenTypes.LPAREN) {
+            this.match(tokenTypes.LPAREN);
             node = this.disjunction();
-            this.match(this.lexer.types.RPAREN);
+            this.match(tokenTypes.RPAREN);
             return node;
         }
-        if (this.lookahead.type === this.lexer.types.ID) {
+        if (this.lookahead.type === tokenTypes.ID) {
             return this.comparison();
         }
         throw new Error(`Expected start of operand, but found ${this.lookahead.type}`);
@@ -163,9 +165,9 @@ class Parser {
 
     conjunction() {
         var node = this.operand();
-        while (this.lookahead.type === this.lexer.types.AND) {
+        while (this.lookahead.type === tokenTypes.AND) {
             var parent = new Ast(this.lookahead);
-            this.match(this.lexer.types.AND);
+            this.match(tokenTypes.AND);
             var sibling = this.operand();
             parent.addChild(node);
             parent.addChild(sibling);
@@ -176,9 +178,9 @@ class Parser {
 
     disjunction() {
         var node = this.conjunction();
-        while (this.lookahead.type === this.lexer.types.OR) {
+        while (this.lookahead.type === tokenTypes.OR) {
             var parent = new Ast(this.lookahead);
-            this.match(this.lexer.types.OR);
+            this.match(tokenTypes.OR);
             var sibling = this.conjunction();
             parent.addChild(node);
             parent.addChild(sibling);
@@ -189,47 +191,47 @@ class Parser {
 
     relation() {
         var node;
-        if (this.lookahead.type === this.lexer.types.PROJECT) {
-            this.match(this.lexer.types.PROJECT);
-            node = new Ast(this.lexer.types.PROJECT);
+        if (this.lookahead.type === tokenTypes.PROJECT) {
+            this.match(tokenTypes.PROJECT);
+            node = new Ast(tokenTypes.PROJECT);
             node.addChild(this.attributes());
-            this.match(this.lexer.types.LPAREN);
+            this.match(tokenTypes.LPAREN);
             node.addChild(this.unionIntersection());
-            this.match(this.lexer.types.RPAREN);
+            this.match(tokenTypes.RPAREN);
             return node;
         }
-        if (this.lookahead.type === this.lexer.types.SELECT) {
-            this.match(this.lexer.types.SELECT);
-            node = new Ast(this.lexer.types.SELECT);
+        if (this.lookahead.type === tokenTypes.SELECT) {
+            this.match(tokenTypes.SELECT);
+            node = new Ast(tokenTypes.SELECT);
             node.addChild(this.disjunction());
-            this.match(this.lexer.types.LPAREN);
+            this.match(tokenTypes.LPAREN);
             node.addChild(this.unionIntersection());
-            this.match(this.lexer.types.RPAREN);
+            this.match(tokenTypes.RPAREN);
             return node;
         } 
-        if (this.lookahead.type === this.lexer.types.RENAME) {
-            this.match(this.lexer.types.RENAME);
-            node = new Ast(this.lexer.types.RENAME);
+        if (this.lookahead.type === tokenTypes.RENAME) {
+            this.match(tokenTypes.RENAME);
+            node = new Ast(tokenTypes.RENAME);
             node.addChild(this.attribute());
-            if (this.lookahead.type === this.lexer.types.LBRACK) {
-                this.match(this.lexer.types.LBRACK);
+            if (this.lookahead.type === tokenTypes.LBRACK) {
+                this.match(tokenTypes.LBRACK);
                 node.addChild(this.attributes());
-                this.match(this.lexer.types.RBRACK);
+                this.match(tokenTypes.RBRACK);
             }
-            this.match(this.lexer.types.LPAREN);
+            this.match(tokenTypes.LPAREN);
             node.addChild(this.unionIntersection());
-            this.match(this.lexer.types.RPAREN);
+            this.match(tokenTypes.RPAREN);
             return node;
         }
-        if (this.lookahead.type === this.lexer.types.LPAREN) {
-            this.match(this.lexer.types.LPAREN);
+        if (this.lookahead.type === tokenTypes.LPAREN) {
+            this.match(tokenTypes.LPAREN);
             node = this.unionIntersection();
-            this.match(this.lexer.types.RPAREN);
+            this.match(tokenTypes.RPAREN);
             return node;
         }
-        if (this.lookahead.type === this.lexer.types.ID) {
+        if (this.lookahead.type === tokenTypes.ID) {
             node = new Ast(this.lookahead);
-            this.match(this.lexer.types.ID);
+            this.match(tokenTypes.ID);
             return node;
         }
         throw new Error(`Expected start of relation but found ${this.lookahead.type}`);
@@ -237,9 +239,9 @@ class Parser {
 
     cartesianProduct() {
         var node = this.relation();
-        while (this.lookahead.type === this.lexer.types.CPROD) {
+        while (this.lookahead.type === tokenTypes.CPROD) {
             var parent = new Ast(this.lookahead);
-            this.match(this.lexer.types.CPROD);
+            this.match(tokenTypes.CPROD);
             var sibling = this.relation();
             parent.addChild(node);
             parent.addChild(sibling);
@@ -250,9 +252,9 @@ class Parser {
 
     join() {
         var node = this.cartesianProduct();
-        while (this.lookahead.type === this.lexer.types.NJOIN) {
+        while (this.lookahead.type === tokenTypes.NJOIN) {
             var parent = new Ast(this.lookahead);
-            this.match(this.lexer.types.NJOIN);
+            this.match(tokenTypes.NJOIN);
             var sibling = this.cartesianProduct();
             parent.addChild(node);
             parent.addChild(sibling);
@@ -263,9 +265,9 @@ class Parser {
 
     difference() {
         var node = this.join();
-        while (this.lookahead.type === this.lexer.types.DIFF) {
+        while (this.lookahead.type === tokenTypes.DIFF) {
             var parent = new Ast(this.lookahead);
-            this.match(this.lexer.types.DIFF);
+            this.match(tokenTypes.DIFF);
             var sibling = this.join();
             parent.addChild(node);
             parent.addChild(sibling);
@@ -276,13 +278,13 @@ class Parser {
 
     unionIntersection() {
         var node = this.difference();
-        while (this.lookahead.type === this.lexer.types.UNION ||
-               this.lookahead.type === this.lexer.types.ISECT) {
+        while (this.lookahead.type === tokenTypes.UNION ||
+               this.lookahead.type === tokenTypes.ISECT) {
             var parent = new Ast(this.lookahead);
-            if (this.lookahead.type === this.lexer.types.UNION)
-                this.match(this.lexer.types.UNION);
+            if (this.lookahead.type === tokenTypes.UNION)
+                this.match(tokenTypes.UNION);
             else 
-                this.match(this.lexer.types.ISECT);
+                this.match(tokenTypes.ISECT);
             var sibling = this.difference();
             parent.addChild(node);
             parent.addChild(sibling);

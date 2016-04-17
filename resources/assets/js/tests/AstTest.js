@@ -1,11 +1,11 @@
-import * as TestCase from './TestCase.js';
+import { TestCase } from './TestCase.js';
 import Token from '../language/Token.js';
 import Ast from '../language/Ast.js';
 
 /** Tests the Ast class. */
 export var AstTest = function() {};
 
-AstTest.prototype = new TestCase.TestCase();
+AstTest.prototype = new TestCase();
 
 AstTest.prototype.it_is_an_Ast = function() {
     var ast = new Ast();
@@ -136,21 +136,23 @@ AstTest.prototype.it_has_a_tree_string_representation_with_the_ast_as_the_root_n
 };
 
 AstTest.prototype.it_can_visit_the_ast_with_a_visitor_based_on_the_node_type = function() {
-    var visitor = {
-        NUMBER: function(node) {
-            return node.getNodeValue();
-        },
-        PLUS: function(node) {
-            return node.children[0].visit(this) + node.children[1].visit(this);
-        }
+    // mock visitor with the ability to add two numbers
+    var visitor = function() {
+        this.visit = {
+            NUMBER: function(node) {
+                return node.getNodeValue();
+            },
+            PLUS: function(node) {
+                return node.children[0].visit(this) + node.children[1].visit(this);
+            },
+        };
     };
 
     var ast = new Ast('PLUS');
     ast.addChild(new Ast('NUMBER', 12));
     ast.addChild(new Ast('NUMBER', 13));
+    var vis = new visitor();
 
-    this.assertStrictlyEqual(25, ast.visit(visitor));
+    this.assertStrictlyEqual(25, ast.visit(vis));
 };
-
-
 

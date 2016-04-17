@@ -1,4 +1,5 @@
 import Token from './Token.js';
+import { tokenTypes } from './TokenTypes.js';
 
 class Lexer {
 
@@ -12,38 +13,6 @@ class Lexer {
         this.text = text;
         this.pos = 0;
         this.char = this.text[this.pos];
-        this.types = { 
-            EOF: 'EOF',
-            ID: 'ID',
-            NUMBER: 'NUMBER',
-            STRING: 'STRING',
-            ATTR: 'ATTR',
-            LIST: 'LIST',
-            LPAREN: '(',
-            RPAREN: ')',
-            LBRACK: '[',
-            RBRACK: ']',
-            DOT: 'DOT',
-            COMMA: 'COMMA',
-            NJOIN: 'NJOIN',
-            SELECT: 'SELECT',
-            PROJECT: 'PROJECT',
-            RENAME: 'RENAME',
-            UNION: 'UNION',
-            ISECT: 'ISECT',
-            DIFF: 'DIFF',
-            CPROD: 'CPROD',
-            AND: 'AND',
-            OR: 'OR',
-            NOT: 'NOT',
-            MINUS: 'MINUS',
-            GRTR: 'GRTR',
-            GEQ: 'GEQ',
-            EQL: 'EQL',
-            NEQ: 'NEQ',
-            LESS: 'LESS',
-            LEQ: 'LEQ'
-        };
         this.ws = [' ', '\t', '\r', '\n'];
     }
 
@@ -94,7 +63,7 @@ class Lexer {
             id += this.char;
             this.consume();
         } while (this.char !== null && /\w/.test(this.char));
-        return new Token(this.types.ID, id);
+        return new Token(tokenTypes.ID, id);
     }
 
 
@@ -109,7 +78,7 @@ class Lexer {
             this.consume();
         } while (this.char !== null && /[0-9]/.test(this.char));
 
-        return new Token(this.types.NUMBER, number);
+        return new Token(tokenTypes.NUMBER, number);
     }
 
     string() {
@@ -126,7 +95,7 @@ class Lexer {
         else
             throw new Error(`String starting at position ${startPos} is not closed`);
 
-        return new Token(this.types.STRING, string);
+        return new Token(tokenTypes.STRING, string);
     }
 
     /**
@@ -144,93 +113,93 @@ class Lexer {
                     continue;
                 case '(':
                     this.consume();
-                    return new Token(this.types.LPAREN, null);
+                    return new Token(tokenTypes.LPAREN, null);
                 case ')':
                     this.consume();
-                    return new Token(this.types.RPAREN, null);
+                    return new Token(tokenTypes.RPAREN, null);
                 case '[':
                     this.consume();
-                    return new Token(this.types.LBRACK, null);
+                    return new Token(tokenTypes.LBRACK, null);
                 case ']':
                     this.consume();
-                    return new Token(this.types.RBRACK, null);
+                    return new Token(tokenTypes.RBRACK, null);
                 case '.':
                     this.consume();
-                    return new Token(this.types.DOT, null);
+                    return new Token(tokenTypes.DOT, null);
                 case ',':
                     this.consume();
-                    return new Token(this.types.COMMA, null);
+                    return new Token(tokenTypes.COMMA, null);
                 case '"':
                     return this.string();
                 case '⨝': // natural join symbol
                     this.consume();
-                    return new Token(this.types.NJOIN, null);
+                    return new Token(tokenTypes.NJOIN, null);
                 case 'σ':
                     this.consume();
-                    return new Token(this.types.SELECT, null);
+                    return new Token(tokenTypes.SELECT, null);
                 case 'Π': case 'π':
                     this.consume();
-                    return new Token(this.types.PROJECT, null);
+                    return new Token(tokenTypes.PROJECT, null);
                 case 'ρ':
                     this.consume();
-                    return new Token(this.types.RENAME, null);
+                    return new Token(tokenTypes.RENAME, null);
                 case '∪':
                     this.consume();
-                    return new Token(this.types.UNION, null);
+                    return new Token(tokenTypes.UNION, null);
                 case '∩':
                     this.consume();
-                    return new Token(this.types.ISECT, null);
+                    return new Token(tokenTypes.ISECT, null);
                 case '−':
                     this.consume();
-                    return new Token(this.types.DIFF, null);
+                    return new Token(tokenTypes.DIFF, null);
                 case '×':
                     this.consume();
-                    return new Token(this.types.CPROD, null);
+                    return new Token(tokenTypes.CPROD, null);
                 case '∧':
                     this.consume();
-                    return new Token(this.types.AND, null);
+                    return new Token(tokenTypes.AND, null);
                 case '∨':
                     this.consume();
-                    return new Token(this.types.OR, null);
+                    return new Token(tokenTypes.OR, null);
                 case '¬':
                     this.consume();
-                    return new Token(this.types.NOT, null);
+                    return new Token(tokenTypes.NOT, null);
                 case '-':
                     this.consume();
-                    return new Token(this.types.MINUS, null);
+                    return new Token(tokenTypes.MINUS, null);
                 case '!':
                     this.consume();
                     if (this.char === '=') {
                         this.consume();
-                        return new Token(this.types.NEQ, null);
+                        return new Token(tokenTypes.NEQ, null);
                     }
-                    return new Token(this.types.NOT, null);
+                    return new Token(tokenTypes.NOT, null);
                 case '>':
                     this.consume();
                     if (this.char === '=') {
                         this.consume();
-                        return new Token(this.types.GEQ, null);
+                        return new Token(tokenTypes.GEQ, null);
                     }
-                    return new Token(this.types.GRTR, null);
+                    return new Token(tokenTypes.GRTR, null);
                 case '≥':
                     this.consume();
-                    return new Token(this.types.GEQ, null);
+                    return new Token(tokenTypes.GEQ, null);
                 case '=':
                     this.consume();
-                    return new Token(this.types.EQL, null);
+                    return new Token(tokenTypes.EQL, null);
                 case '≠':
                     this.consume();
-                    return new Token(this.types.NEQ, null);
+                    return new Token(tokenTypes.NEQ, null);
                 case '<':
                     this.consume();
                     if (this.char === '=') {
                         this.consume();
-                        return new Token(this.types.LEQ, null);
+                        return new Token(tokenTypes.LEQ, null);
                     }
-                    return new Token(this.types.LESS, null);
+                    return new Token(tokenTypes.LESS, null);
                 case '≤':
                     this.consume();
-                    return new Token(this.types.LEQ, null);
+                    return new Token(tokenTypes.LEQ, null);
                 default:
                     if (/[1-9]/.test(this.char))
                         return this.number();
@@ -239,7 +208,7 @@ class Lexer {
                     throw new Error(`Invalid character: ${this.char} at position ${this.pos}`);
             }
         }
-        return new Token(this.types.EOF, null);
+        return new Token(tokenTypes.EOF, null);
     }
 }
 

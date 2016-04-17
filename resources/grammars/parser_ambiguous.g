@@ -26,7 +26,7 @@ RELATION    -> "projection" ATTRIBUTES "(" UNIONISECT ")"
              | "selection" DISJUNCTION "(" UNIONISECT ")"
              | "rename" id ["[" ATTRIBUTES "]"] "(" UNIONISECT ")"
              | "(" UNIONISECT ")"
-             | id
+             | relation
 ATTRIBUTES  -> ATTRIBUTE {"," ATTRIBUTES}
 ATTRIBUTE   -> id [QUALIFIED]
 QUALIFIED   -> "." id

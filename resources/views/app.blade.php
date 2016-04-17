@@ -1,5 +1,6 @@
 @extends('master')
 
 @section('content')
-blah
+    <div id="data"></div>
+    <div id="output"></div>
 @endsection

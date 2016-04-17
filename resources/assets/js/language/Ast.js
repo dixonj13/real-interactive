@@ -106,13 +106,13 @@ class Ast {
     }
 
     /**
-     * Calls the given visitor with the node, based
+     * calls the given visitor with the node, based
      * on the node's type.
-     * @param  {Visitor} visitor
+     * @param  {visitor} visitor
      * @return {null}         
      */
     visit(visitor) {
-        return visitor[this.getNodeType()].call(visitor, this);
+        return visitor.visit[this.getNodeType()].call(visitor, this);
     }
 }
 
