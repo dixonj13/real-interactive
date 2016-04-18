@@ -2,29 +2,79 @@ import Ast from './language/Ast';
 import Token from './language/Token';
 import * as ops from './operations';
 
-var relations = [
-    {
-        name: 'movies',
-        attributes: ['id', 'title', 'year'],
-        tuples: [
-            { 'id': 1, 'title': 'Drive', 'year': 2007 },
-            { 'id': 2, 'title': 'Brooklyn', 'year': 2015 },
-            { 'id': 3, 'title': 'Gladiator', 'year': 2000 },
-            { 'id': 4, 'title': 'Armageddon', 'year': 1998 },
-            { 'id': 5, 'title': 'Ratatoullie', 'year': 2007 },
-        ],
-    },
-    {
-        name: 'lists',
-        attributes: ['id', 'movieId'],
-        tupes: [
-            { 'id': 1, 'movieId': 2 },
-            { 'id': 1, 'movieId': 3 },
-            { 'id': 2, 'movieId': 1 },
-            { 'id': 2, 'movieId': 4 },
-            { 'id': 2, 'movieId': 5 },
-        ],
+export var Engine = function(dataSet) {
+    this.dataSet = dataSet;
+};
+
+Engine.prototype.lookup = function(relationName) {
+    var relation = this.dataSet[relationName];
+    if (relation)
+        return relation;
+    else
+        // TODO: More verbose error handling
+        throw Error(`Relation ${relationName} does not exist.`);
+};
+
+Engine.prototype.attributes = function(relation) {
+    var attributes = [];
+    if (relation.length > 0) 
+        attributes = Object.keys(relation[0]);
+    return attributes.map(attr => {
+        var split = attr.split('.');
+        return { qualifier: split[0], attribute: split[1] };
+    });
+};
+
+Engine.prototype.matchAttribute = function(attribute, attributes, qualified) {
+    var match;
+    if (qualified) {
+        match = attributes.filter(attr => {
+            if (attribute.qualifier === attr.qualifier &&
+                attribute.attribute === attr.attribute)
+                return attr;
+        });
+    } else {
+        match = attributes.filter(attr => {
+            if (attribute.attribute === attr.attribute)
+                return attr;
+        });
     }
-];
+    return match;
+};
+
+Engine.prototype.resolveAttribute = function(attribute, attributeList) {
+    var matches = null;
+    if (attribute.qualifier) {
+        matches = this.matchAttribute(attribute, attributeList, true);
+        if (matches.length > 0)
+            return matches[0].qualifier + '.' + matches[0].attribute;
+        else
+            // TODO: More verbose error handling
+            throw Error(`${attribute.qualifier}.${attribute.attribute} does not exist.`);
+    } else {
+        matches = this.matchAttribute(attribute, attributeList, false);
+        if (matches.length > 1)
+            // TODO: More verbose error handling
+            throw Error(`${attribute.attribute} is ambiguous.`);
+        else if (matches.length === 1)
+            return matches[0].qualifier + '.' + matches[0].attribute;
+        else
+            // TODO: More verbose error handling
+            throw Error(`${attribute.attribute} does not exist.`);
+    }
+};
+
+Engine.prototype.project = function(relation, projections) {
+    var attributes = this.attributes(relation);
+    var resolved = projections.map(projection => {
+        this.resolveAttribute(projection, attributes);
+    });
+    return ops.projection(resolved, relation);
+};
+
+
+
+
+
 
 

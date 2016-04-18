@@ -1,15 +1,17 @@
 
 export function projection(attributes, relation) {
-    return relation.tuples.map(tuple => {
-        var result = {};
-        attributes.map(attr => { result[attr] = (tuple[attr]) ? tuple[attr] : null; });
-        return result;
+    return relation.map(tuple => {
+        var matches = {};
+        attributes.forEach(key => {
+            matches[key] = tuple[key];
+        });
+        return matches;
     });
 }
 
 export function selection(comparisons, relation) {
     return relation.tuples.filter(tuple => {
-        
+
     });
 }
 
@@ -25,3 +27,4 @@ function compare(stmt) {
             throw Error('Invalid comparison operation');
     }
 }
+

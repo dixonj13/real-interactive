@@ -441,7 +441,7 @@ ParserTest.prototype.it_can_change_associativity_of_predicate_operations_with_pa
 ParserTest.prototype.it_can_parse_an_id_as_a_relation = function() {
     this.parser = new Parser(new Lexer('table1'));
     var actual = this.parser.relation();
-    var expected = new Ast(tokenTypes.ID, 'table1');
+    var expected = new Ast(tokenTypes.RELATION, 'table1');
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -449,7 +449,7 @@ ParserTest.prototype.it_can_parse_an_id_as_a_relation = function() {
 ParserTest.prototype.it_can_parse_a_parenthesized_relation = function() {
     this.parser = new Parser(new Lexer('(table2)'));
     var actual = this.parser.relation();
-    var expected = new Ast(tokenTypes.ID, 'table2');
+    var expected = new Ast(tokenTypes.RELATION, 'table2');
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -466,7 +466,7 @@ ParserTest.prototype.it_can_parse_a_project_statement_as_a_relation = function()
     list.addChild(item2);
     list.addChild(new Ast(tokenTypes.ID, 'a3'));
     expected.addChild(list);
-    expected.addChild(new Ast(tokenTypes.ID, 't1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -479,7 +479,7 @@ ParserTest.prototype.it_can_parse_a_select_statement_as_a_relation = function() 
     predicate.addChild(new Ast(tokenTypes.ID, 'a'));
     predicate.addChild(new Ast(tokenTypes.NUMBER, '24'));
     expected.addChild(predicate);
-    expected.addChild(new Ast(tokenTypes.ID, 't1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -489,7 +489,7 @@ ParserTest.prototype.it_can_parse_a_rename_statement_with_no_attributes_as_a_rel
     var actual = this.parser.relation();
     var expected = new Ast(tokenTypes.RENAME);
     expected.addChild(new Ast(tokenTypes.ID, 'foo'));
-    expected.addChild(new Ast(tokenTypes.ID, 't1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -504,7 +504,7 @@ ParserTest.prototype.it_can_parse_a_rename_statement_with_a_list_of_attributes_a
     list.addChild(new Ast(tokenTypes.ID, 'b2'));
     list.addChild(new Ast(tokenTypes.ID, 'b3'));
     expected.addChild(list);
-    expected.addChild(new Ast(tokenTypes.ID, 't1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -525,8 +525,8 @@ ParserTest.prototype.it_can_parse_a_cartesian_product = function() {
     this.parser = new Parser(new Lexer('r1 × r2'));
     var actual = this.parser.cartesianProduct();
     var expected = new Ast(tokenTypes.CPROD);
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r2'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -536,10 +536,10 @@ ParserTest.prototype.it_parses_cartesian_product_with_left_associativity = funct
     var actual = this.parser.cartesianProduct();
     var expected = new Ast(tokenTypes.CPROD);
     var child = new Ast(tokenTypes.CPROD);
-    child.addChild(new Ast(tokenTypes.ID, 'r1'));
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(child);
-    expected.addChild(new Ast(tokenTypes.ID, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -549,9 +549,9 @@ ParserTest.prototype.it_can_change_associativity_of_cartesian_product_with_paren
     var actual = this.parser.cartesianProduct();
     var expected = new Ast(tokenTypes.CPROD);
     var child = new Ast(tokenTypes.CPROD);
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
-    child.addChild(new Ast(tokenTypes.ID, 'r3'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
@@ -561,8 +561,8 @@ ParserTest.prototype.it_can_parse_a_join = function() {
     this.parser = new Parser(new Lexer('r1 ⨝ r2')); // join symbol
     var actual = this.parser.join();
     var expected = new Ast(tokenTypes.NJOIN);
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r2'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -572,10 +572,10 @@ ParserTest.prototype.it_parses_join_with_left_associativity = function() {
     var actual = this.parser.join();
     var expected = new Ast(tokenTypes.NJOIN);
     var child = new Ast(tokenTypes.NJOIN);
-    child.addChild(new Ast(tokenTypes.ID, 'r1'));
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(child);
-    expected.addChild(new Ast(tokenTypes.ID, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -585,9 +585,9 @@ ParserTest.prototype.it_can_change_associativity_of_join_with_parenthesization =
     var actual = this.parser.join();
     var expected = new Ast(tokenTypes.NJOIN);
     var child = new Ast(tokenTypes.NJOIN);
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
-    child.addChild(new Ast(tokenTypes.ID, 'r3'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
@@ -597,8 +597,8 @@ ParserTest.prototype.it_can_parse_difference = function() {
     this.parser = new Parser(new Lexer('r1 − r2')); 
     var actual = this.parser.difference();
     var expected = new Ast(tokenTypes.DIFF);
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r2'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -608,10 +608,10 @@ ParserTest.prototype.it_parses_difference_with_left_associativity = function() {
     var actual = this.parser.difference();
     var expected = new Ast(tokenTypes.DIFF);
     var child = new Ast(tokenTypes.DIFF);
-    child.addChild(new Ast(tokenTypes.ID, 'r1'));
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(child);
-    expected.addChild(new Ast(tokenTypes.ID, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -621,9 +621,9 @@ ParserTest.prototype.it_can_change_associativity_of_difference_with_parenthesiza
     var actual = this.parser.difference();
     var expected = new Ast(tokenTypes.DIFF);
     var child = new Ast(tokenTypes.DIFF);
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
-    child.addChild(new Ast(tokenTypes.ID, 'r3'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
@@ -633,8 +633,8 @@ ParserTest.prototype.it_can_parse_union = function() {
     this.parser = new Parser(new Lexer('r1 ∪ r2')); 
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.UNION);
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r2'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -644,10 +644,10 @@ ParserTest.prototype.it_parses_union_with_left_associativity = function() {
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.UNION);
     var child = new Ast(tokenTypes.UNION);
-    child.addChild(new Ast(tokenTypes.ID, 'r1'));
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(child);
-    expected.addChild(new Ast(tokenTypes.ID, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -657,9 +657,9 @@ ParserTest.prototype.it_can_change_associativity_of_union_with_parenthesization 
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.UNION);
     var child = new Ast(tokenTypes.UNION);
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
-    child.addChild(new Ast(tokenTypes.ID, 'r3'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
@@ -669,8 +669,8 @@ ParserTest.prototype.it_can_parse_intersection = function() {
     this.parser = new Parser(new Lexer('r1 ∩ r2')); 
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.ISECT);
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r2'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -680,10 +680,10 @@ ParserTest.prototype.it_parses_intersection_with_left_associativity = function()
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.ISECT);
     var child = new Ast(tokenTypes.ISECT);
-    child.addChild(new Ast(tokenTypes.ID, 'r1'));
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(child);
-    expected.addChild(new Ast(tokenTypes.ID, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -693,9 +693,9 @@ ParserTest.prototype.it_can_change_associativity_of_intersection_with_parenthesi
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.ISECT);
     var child = new Ast(tokenTypes.ISECT);
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
-    child.addChild(new Ast(tokenTypes.ID, 'r3'));
-    expected.addChild(new Ast(tokenTypes.ID, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
@@ -706,10 +706,10 @@ ParserTest.prototype.it_parses_union_and_intersection_with_the_same_precedence =
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.ISECT);
     var child = new Ast(tokenTypes.UNION);
-    child.addChild(new Ast(tokenTypes.ID, 'r1'));
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(child);
-    expected.addChild(new Ast(tokenTypes.ID, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 
@@ -717,10 +717,10 @@ ParserTest.prototype.it_parses_union_and_intersection_with_the_same_precedence =
     actual = this.parser.unionIntersection();
     expected = new Ast(tokenTypes.UNION);
     child = new Ast(tokenTypes.ISECT);
-    child.addChild(new Ast(tokenTypes.ID, 'r1'));
-    child.addChild(new Ast(tokenTypes.ID, 'r2'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    child.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(child);
-    expected.addChild(new Ast(tokenTypes.ID, 'r3'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -730,17 +730,17 @@ ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = functi
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.ISECT);
     var union = new Ast(tokenTypes.UNION);
-    union.addChild(new Ast(tokenTypes.ID, 'r1'));
-    union.addChild(new Ast(tokenTypes.ID, 'r2'));
+    union.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    union.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     expected.addChild(union);
     var cprod = new Ast(tokenTypes.CPROD);
-    cprod.addChild(new Ast(tokenTypes.ID, 'r5'));
-    cprod.addChild(new Ast(tokenTypes.ID, 'r6'));
+    cprod.addChild(new Ast(tokenTypes.RELATION, 'r5'));
+    cprod.addChild(new Ast(tokenTypes.RELATION, 'r6'));
     var njoin = new Ast(tokenTypes.NJOIN);
-    njoin.addChild(new Ast(tokenTypes.ID, 'r4'));
+    njoin.addChild(new Ast(tokenTypes.RELATION, 'r4'));
     njoin.addChild(cprod);
     var diff = new Ast(tokenTypes.DIFF);
-    diff.addChild(new Ast(tokenTypes.ID, 'r3'));
+    diff.addChild(new Ast(tokenTypes.RELATION, 'r3'));
     diff.addChild(njoin);
     expected.addChild(diff);
 
@@ -750,19 +750,19 @@ ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = functi
     actual = this.parser.unionIntersection();
     expected = new Ast(tokenTypes.ISECT);
     cprod = new Ast(tokenTypes.CPROD);
-    cprod.addChild(new Ast(tokenTypes.ID, 'r1'));
-    cprod.addChild(new Ast(tokenTypes.ID, 'r2'));
+    cprod.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    cprod.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     njoin = new Ast(tokenTypes.NJOIN);
     njoin.addChild(cprod);
-    njoin.addChild(new Ast(tokenTypes.ID, 'r3'));
+    njoin.addChild(new Ast(tokenTypes.RELATION, 'r3'));
     diff = new Ast(tokenTypes.DIFF);
     diff.addChild(njoin);
-    diff.addChild(new Ast(tokenTypes.ID, 'r4'));
+    diff.addChild(new Ast(tokenTypes.RELATION, 'r4'));
     union = new Ast(tokenTypes.UNION);
     union.addChild(diff);
-    union.addChild(new Ast(tokenTypes.ID, 'r5'));
+    union.addChild(new Ast(tokenTypes.RELATION, 'r5'));
     expected.addChild(union);
-    expected.addChild(new Ast(tokenTypes.ID, 'r6'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r6'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };
@@ -772,19 +772,19 @@ ParserTest.prototype.it_can_change_precedence_of_set_operations_with_parenthesiz
     var actual = this.parser.unionIntersection();
     var expected = new Ast(tokenTypes.CPROD);
     var union = new Ast(tokenTypes.UNION);
-    union.addChild(new Ast(tokenTypes.ID, 'r1'));
-    union.addChild(new Ast(tokenTypes.ID, 'r2'));
+    union.addChild(new Ast(tokenTypes.RELATION, 'r1'));
+    union.addChild(new Ast(tokenTypes.RELATION, 'r2'));
     var isect = new Ast(tokenTypes.ISECT);
     isect.addChild(union);
-    isect.addChild(new Ast(tokenTypes.ID, 'r3'));
+    isect.addChild(new Ast(tokenTypes.RELATION, 'r3'));
     var diff = new Ast(tokenTypes.DIFF);
     diff.addChild(isect);
-    diff.addChild(new Ast(tokenTypes.ID, 'r4'));
+    diff.addChild(new Ast(tokenTypes.RELATION, 'r4'));
     var njoin = new Ast(tokenTypes.NJOIN);
     njoin.addChild(diff);
-    njoin.addChild(new Ast(tokenTypes.ID, 'r5'));
+    njoin.addChild(new Ast(tokenTypes.RELATION, 'r5'));
     expected.addChild(njoin);
-    expected.addChild(new Ast(tokenTypes.ID, 'r6'));
+    expected.addChild(new Ast(tokenTypes.RELATION, 'r6'));
 
     this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
 };

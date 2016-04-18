@@ -2,11 +2,19 @@ import Ast from './Ast';
 import Token from './Token';
 import Lexer from './Lexer';
 import Parser from './Parser';
+import { Engine } from '../engine';
 import { tokenTypes } from './TokenTypes';
 
-export var Visitor = function() {
+export var Visitor = function(engine) {
+
+    this.engine = engine;
 
     this.visit = {
+
+        RELATION: function(node) {
+            node.relation = this.engine.lookup(node.getNodeValue());
+            return node.relation;
+        },
 
         NUMBER: function(node) {
             return Number.parseInt(node.getNodeValue());
@@ -99,8 +107,8 @@ export var Visitor = function() {
         PROJECT: function(node) {
             var attributes = node.children[0].visit(this);
             var relation = node.children[1].visit(this);
-            console.log(attributes);
-            console.log(relation);
+            node.relation = this.engine.project(relation, attributes);
+            return node.relation;
         },
 
     };

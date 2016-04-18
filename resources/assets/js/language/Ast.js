@@ -80,9 +80,9 @@ class Ast {
         if (this.isNull())
             return '<null>';
         else if (this.isLeaf())
-            return '<' + this.token.value + '>';
+            return `<${this.token.type}, ${this.token.value}>`;
         else 
-            return '<' + this.token.type + '>';
+            return `<${this.token.type}>`;
     }
 
     /**

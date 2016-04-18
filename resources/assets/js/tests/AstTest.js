@@ -111,7 +111,7 @@ AstTest.prototype.it_has_a_string_representation_for_a_null_node = function() {
 
 AstTest.prototype.it_has_a_string_representation_for_a_leaf_node = function() {
     var ast = new Ast('ID', 'leaf');
-    this.assertStrictlyEqual('<leaf>', ast.toNodeString());
+    this.assertStrictlyEqual('<ID, leaf>', ast.toNodeString());
 };
 
 AstTest.prototype.it_has_a_string_representation_for_a_nonleaf_node = function() {
@@ -126,13 +126,13 @@ AstTest.prototype.it_has_a_tree_string_representation_with_the_ast_as_the_root_n
     ast.addChild(new Ast('NUMBER', '12'));
     ast.addChild(new Ast('NUMBER', '4'));
 
-    this.assertStrictlyEqual('(<PLUS> <12> <4>)', ast.toTreeString());
+    this.assertStrictlyEqual('(<PLUS> <NUMBER, 12> <NUMBER, 4>)', ast.toTreeString());
 
     var ast2 = new Ast('MINUS');
     ast2.addChild(ast);
     ast2.addChild(new Ast('NUMBER', '7'));
 
-    this.assertStrictlyEqual('(<MINUS> (<PLUS> <12> <4>) <7>)', ast2.toTreeString());
+    this.assertStrictlyEqual('(<MINUS> (<PLUS> <NUMBER, 12> <NUMBER, 4>) <NUMBER, 7>)', ast2.toTreeString());
 };
 
 AstTest.prototype.it_can_visit_the_ast_with_a_visitor_based_on_the_node_type = function() {

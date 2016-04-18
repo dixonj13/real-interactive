@@ -232,6 +232,7 @@ class Parser {
         if (this.lookahead.type === tokenTypes.ID) {
             node = new Ast(this.lookahead);
             this.match(tokenTypes.ID);
+            node.token.type = tokenTypes.RELATION; // differentiate relations from ids at this point
             return node;
         }
         throw new Error(`Expected start of relation but found ${this.lookahead.type}`);

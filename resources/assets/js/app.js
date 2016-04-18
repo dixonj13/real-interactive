@@ -3,57 +3,42 @@ import Lexer from './language/Lexer';
 import Parser from './language/Parser';
 import * as ops from './operations';
 import * as table from './visualizations/table';
+import { Engine } from './engine';
 import { Visitor } from './language/Visitor';
 import { tokenTypes } from './language/TokenTypes';
 
-var relations = [
-    {
-        name: 'food',
-        attributes: ['vegetable', 'fruit', 'meat'],
-        tuples: [
-            { vegetable: 'broccoli', meat: 'pork'},
-            { vegetable: 'broccoli', fruit: 'apple', meat: 'fish'},
-            { vegetable: 'squash', fruit: 'pear', meat: 'steak'},
-            { vegetable: 'carrot', fruit: 'banana', meat: 'chicken'},
-        ],
-    },
-];
+var data = {
+    'movies': [
+        { 'movies.id': 1, 'movies.title': 'Drive', 'movies.year': 2007 },
+        { 'movies.id': 2, 'movies.title': 'Brooklyn', 'movies.year': 2015 },
+        { 'movies.id': 3, 'movies.title': 'Gladiator', 'movies.year': 2000 },
+        { 'movies.id': 4, 'movies.title': 'Armageddon', 'movies.year': 1998 },
+        { 'movies.id': 5, 'movies.title': 'Ratatoullie', 'movies.year': 2007 },
+    ],
+    'lists': [
+        { 'lists.id': 1, 'lists.movieId': 2 },
+        { 'lists.id': 1, 'lists.movieId': 3 },
+        { 'lists.id': 2, 'lists.movieId': 1 },
+        { 'lists.id': 2, 'lists.movieId': 4 },
+        { 'lists.id': 2, 'lists.movieId': 5 },
+    ],
+    'images': [
+        { 'images.url': 1, 'images.id': 'x', 'movies.id': 2, 'images.x': 1, 'list.id': 1 }
+    ],
+};
 
-var attributes = ['meat', 'fruit'];
+table.update('movies', Object.keys(data.movies[0]), data.movies, '#exp');
 
-var result = ops.projection(attributes, relations[0]);
-
-table.update(relations[0].name, relations[0].attributes, relations[0].tuples, '#data');
-table.update(null, attributes, result, '#output');
-
-var input = 'σ table1.x = 1 ∧ (y != 2 ∨ z > -4) (table1)';
+var input = 'π movies.id, title (movies)';
 var lexer = new Lexer(input);
 var parser = new Parser(lexer);
 var tree = parser.relation();
 console.log(tree.toTreeString());
 
-input = 'π table1.x, table1.y (table1)';
-lexer = new Lexer(input);
-parser = new Parser(lexer);
-tree = parser.relation();
-console.log(tree.toTreeString());
-
-var visitor = new Visitor();
-var out = tree.visit(visitor);
-
-input = '(table1)';
-lexer = new Lexer(input);
-parser = new Parser(lexer);
-tree = parser.relation();
-
-visitor = new Visitor();
-out = tree.visit(visitor);
-
-
-
-
-
-
+var engine = new Engine(data);
+var visitor = new Visitor(engine);
+var r = tree.visit(visitor);
+console.log(r);
 
 
 
