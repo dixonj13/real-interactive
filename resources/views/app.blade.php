@@ -3,5 +3,5 @@
 @section('content')
     <div id="data"></div>
     <div id="output"></div>
-    <div id="exp"></div>
+    <div id="output2"></div>
 @endsection

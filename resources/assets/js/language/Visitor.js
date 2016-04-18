@@ -111,6 +111,13 @@ export var Visitor = function(engine) {
             return node.relation;
         },
 
+        SELECT: function(node) {
+            var predicate = node.children[0].visit(this);
+            var relation = node.children[1].visit(this);
+            node.relation = this.engine.select(relation, predicate);
+            return node.relation;
+        },
+
     };
 };
 

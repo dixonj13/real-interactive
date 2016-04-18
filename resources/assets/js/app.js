@@ -27,9 +27,9 @@ var data = {
     ],
 };
 
-table.update('movies', Object.keys(data.movies[0]), data.movies, '#exp');
+table.update('movies', Object.keys(data.movies[0]), data.movies, '#data');
 
-var input = 'π movies.id, title (movies)';
+var input = 'π title, movies.year (movies)';
 var lexer = new Lexer(input);
 var parser = new Parser(lexer);
 var tree = parser.relation();
@@ -39,6 +39,17 @@ var engine = new Engine(data);
 var visitor = new Visitor(engine);
 var r = tree.visit(visitor);
 console.log(r);
+
+table.update(null, Object.keys(r[0]), r, '#output');
+
+input = 'σ (movies.year > 2007 ∨ title = "Gladiator") ∧ id > 1 (movies)';
+lexer = new Lexer(input);
+parser = new Parser(lexer);
+tree = parser.relation();
+console.log(tree.toTreeString());
+
+r = tree.visit(visitor);
+
 
 
 

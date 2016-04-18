@@ -64,12 +64,34 @@ Engine.prototype.resolveAttribute = function(attribute, attributeList) {
     }
 };
 
+Engine.prototype.resolvePredicate = function(tree, attributeList) {
+    if (typeof tree.lhs === 'object') {
+        if (tree.lhs.attribute)
+            tree.lhs = this.resolveAttribute(tree.lhs, attributeList);
+        else
+            this.resolvePredicate(tree.lhs, attributeList);
+    }
+    if (typeof tree.rhs === 'object') {
+        if (tree.rhs.attribute)
+            tree.rhs = this.resolveAttribute(tree.rhs, attributeList);
+        else
+            this.resolvePredicate(tree.rhs, attributeList);
+    }
+};
+
 Engine.prototype.project = function(relation, projections) {
     var attributes = this.attributes(relation);
     var resolved = projections.map(projection => {
-        this.resolveAttribute(projection, attributes);
+        return this.resolveAttribute(projection, attributes);
     });
     return ops.projection(resolved, relation);
+};
+
+Engine.prototype.select = function(relation, predicate) {
+    var attributes = this.attributes(relation);
+    console.log(predicate);
+    this.resolvePredicate(predicate, attributes);
+    console.log(predicate);
 };
 
 
