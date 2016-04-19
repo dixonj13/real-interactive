@@ -94,7 +94,7 @@ export var Visitor = function(engine) {
         NOT: function(node) {
             return {
                 op: 'NOT',
-                stmt: node.children[0].visit(this),
+                lhs: node.children[0].visit(this),
             };
         },
 

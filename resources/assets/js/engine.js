@@ -15,26 +15,16 @@ Engine.prototype.lookup = function(relationName) {
         throw Error(`Relation ${relationName} does not exist.`);
 };
 
-Engine.prototype.attributes = function(relation) {
-    var attributes = [];
-    if (relation.length > 0) 
-        attributes = Object.keys(relation[0]);
-    return attributes.map(attr => {
-        var split = attr.split('.');
-        return { qualifier: split[0], attribute: split[1] };
-    });
-};
-
-Engine.prototype.matchAttribute = function(attribute, attributes, qualified) {
+Engine.prototype.matchAttribute = function(attribute, attributeList, qualified) {
     var match;
     if (qualified) {
-        match = attributes.filter(attr => {
+        match = attributeList.filter(attr => {
             if (attribute.qualifier === attr.qualifier &&
                 attribute.attribute === attr.attribute)
                 return attr;
         });
     } else {
-        match = attributes.filter(attr => {
+        match = attributeList.filter(attr => {
             if (attribute.attribute === attr.attribute)
                 return attr;
         });
@@ -47,7 +37,7 @@ Engine.prototype.resolveAttribute = function(attribute, attributeList) {
     if (attribute.qualifier) {
         matches = this.matchAttribute(attribute, attributeList, true);
         if (matches.length > 0)
-            return matches[0].qualifier + '.' + matches[0].attribute;
+            return matches[0];
         else
             // TODO: More verbose error handling
             throw Error(`${attribute.qualifier}.${attribute.attribute} does not exist.`);
@@ -57,7 +47,7 @@ Engine.prototype.resolveAttribute = function(attribute, attributeList) {
             // TODO: More verbose error handling
             throw Error(`${attribute.attribute} is ambiguous.`);
         else if (matches.length === 1)
-            return matches[0].qualifier + '.' + matches[0].attribute;
+            return matches[0];
         else
             // TODO: More verbose error handling
             throw Error(`${attribute.attribute} does not exist.`);
@@ -65,33 +55,56 @@ Engine.prototype.resolveAttribute = function(attribute, attributeList) {
 };
 
 Engine.prototype.resolvePredicate = function(tree, attributeList) {
+    var lhs, rhs;
+
     if (typeof tree.lhs === 'object') {
         if (tree.lhs.attribute)
-            tree.lhs = this.resolveAttribute(tree.lhs, attributeList);
+            lhs = this.resolveAttribute(tree.lhs, attributeList);
         else
-            this.resolvePredicate(tree.lhs, attributeList);
-    }
+            lhs = this.resolvePredicate(tree.lhs, attributeList);
+    } else 
+        lhs = tree.lhs; 
+
     if (typeof tree.rhs === 'object') {
         if (tree.rhs.attribute)
-            tree.rhs = this.resolveAttribute(tree.rhs, attributeList);
+            rhs = this.resolveAttribute(tree.rhs, attributeList);
         else
-            this.resolvePredicate(tree.rhs, attributeList);
+            rhs = this.resolvePredicate(tree.rhs, attributeList);
+    } else
+        rhs = tree.rhs;
+
+    switch (tree.op) {
+        case '==': case '!=': case '>': case '>=': case '<': case '<=':
+            if (!this.compareTypes(lhs, rhs)) {
+                // TODO: More verbose error handling
+                throw Error(
+                    `${lhs.type ? lhs.qualifier+'.'+lhs.attribute+' of type '+lhs.type : lhs+' of type '+(typeof lhs)}` +
+                    ' cannot be compared with ' + 
+                    `${rhs.type ? rhs.qualifier+'.'+rhs.attribute+' of type '+rhs.type : rhs+' of type '+(typeof rhs)}`
+                );
+            }
+            break;
     }
+
+    return { lhs: lhs, rhs: rhs, op: tree.op };
 };
 
-Engine.prototype.project = function(relation, projections) {
-    var attributes = this.attributes(relation);
-    var resolved = projections.map(projection => {
-        return this.resolveAttribute(projection, attributes);
+Engine.prototype.compareTypes = function(x, y) {
+    var xType = (x.type) ? x.type : typeof x;
+    var yType = (y.type) ? y.type : typeof y;
+    return xType === yType;
+};
+
+Engine.prototype.project = function(relation, projection) {
+    var resolved = projection.map(projection => {
+        return this.resolveAttribute(projection, relation.attributes);
     });
     return ops.projection(resolved, relation);
 };
 
 Engine.prototype.select = function(relation, predicate) {
-    var attributes = this.attributes(relation);
-    console.log(predicate);
-    this.resolvePredicate(predicate, attributes);
-    console.log(predicate);
+    var resolved = this.resolvePredicate(predicate, relation.attributes);
+    return ops.selection(resolved, relation);
 };
 
 
