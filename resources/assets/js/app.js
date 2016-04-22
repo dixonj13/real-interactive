@@ -4,8 +4,8 @@ import Parser from './language/Parser';
 import * as ops from './operations';
 import * as table from './visualizations/table';
 import { Engine } from './engine';
-import { Visitor } from './language/Visitor';
 import { tokenTypes } from './language/TokenTypes';
+import { Visitor as EvalVisitor } from './language/visitors/EvalVisitor';
 
 var data = {
     'movies': {
@@ -47,7 +47,7 @@ var tree = parser.relation();
 console.log(tree.toTreeString());
 
 var engine = new Engine(data);
-var visitor = new Visitor(engine);
+var visitor = new EvalVisitor(engine);
 var r = tree.visit(visitor);
 console.log(r);
 
@@ -64,7 +64,16 @@ console.log(r);
 
 table.update(null, r.attributes.map(a => { return a.qualifier+'.'+a.attribute; }), r.tuples, '#output2');
 
+input = 'π title, movies.year (σ (movies.year > 2007 ∨ title = "Gladiator") ∧ (id > 1) (movies))';
+lexer = new Lexer(input);
+parser = new Parser(lexer);
+tree = parser.relation();
+console.log(tree.toTreeString());
 
+r = tree.visit(visitor);
+console.log(r);
+
+table.update(null, r.attributes.map(a => { return a.qualifier+'.'+a.attribute; }), r.tuples, '#output3');
 
 
 

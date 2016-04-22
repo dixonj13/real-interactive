@@ -1,3 +1,4 @@
+var _ = require('lodash/lang');
 
 /**
  * General TestCase which provides the ability to run
@@ -7,8 +8,7 @@ export var TestCase = function() {};
 
 /**
  * Runner calls all test methods.
- * To denote a test method, prepend 'it_' or 'test_'
- * to the method name.
+ * To denote a test method, prepend 'it_' or 'test_' to the method name.
  */
 TestCase.prototype.run = function() {
     for (var p in this) {
@@ -38,24 +38,12 @@ TestCase.prototype.tearDown = function() {
 };
 
 /**
- * Asserts that x and y are strictly (===) equal.
+ * Asserts that x and y are equal.
  * @param {*} x 
  * @param {*} y 
  */
-TestCase.prototype.assertStrictlyEqual = function(x, y) {
-    if ( x !== y ) {
-        var e = new Error(`Assertion failed; Expected ${x} but received ${y}!`);
-        console.log(e.stack);
-    }
-};
-
-/**
- * Asserts that x and y are loosely (==) equal.
- * @param {*} x
- * @param {*} y 
- */
-TestCase.prototype.assertLooselyEqual = function(x, y) {
-    if ( x !== y ) {
+TestCase.prototype.assertEqual = function(x, y) {
+    if ( ! _.isEqual(x, y) ) {
         var e = new Error(`Assertion failed; Expected ${x} but received ${y}!`);
         console.log(e.stack);
     }

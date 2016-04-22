@@ -1,9 +1,9 @@
-import Ast from './Ast';
-import Token from './Token';
-import Lexer from './Lexer';
-import Parser from './Parser';
-import { Engine } from '../engine';
-import { tokenTypes } from './TokenTypes';
+import Ast from '../Ast';
+import Token from '../Token';
+import Lexer from '../Lexer';
+import Parser from '../Parser';
+import { Engine } from '../../engine';
+import { tokenTypes } from '../TokenTypes';
 
 export var Visitor = function(engine) {
 

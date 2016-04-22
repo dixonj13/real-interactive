@@ -6,6 +6,12 @@ export var Engine = function(dataSet) {
     this.dataSet = dataSet;
 };
 
+/**
+ * Attempts to find the relation with the given name in the data set.
+ * @param  {string} relationName
+ * @return {object}              Relation in the data set.
+ * @throws {Error} If relation with the given name does not exist.
+ */
 Engine.prototype.lookup = function(relationName) {
     var relation = this.dataSet[relationName];
     if (relation)
@@ -15,6 +21,15 @@ Engine.prototype.lookup = function(relationName) {
         throw Error(`Relation ${relationName} does not exist.`);
 };
 
+/**
+ * Returns all matches for an attribute in the attribute list.
+ * If qualified is true, then the attribute's name and qualifier
+ * must both match.
+ * @param  {object}        attribute     Attribute to match.
+ * @param  {array<object>} attributeList List of attributes to match against.
+ * @param  {boolean}       qualified     Whether the qualifier must match.
+ * @return {array<object>}               Matches.
+ */
 Engine.prototype.matchAttribute = function(attribute, attributeList, qualified) {
     var match;
     if (qualified) {
@@ -32,6 +47,15 @@ Engine.prototype.matchAttribute = function(attribute, attributeList, qualified) 
     return match;
 };
 
+/**
+ * Attempts to resolve the given attribute to a single fully
+ * qualified attribute within the attribute list.
+ * @param  {object}        attribute     Attribute to resolve.
+ * @param  {array<object>} attributeList List of fully qualified attributes.
+ * @return {object}                      Fully qualified attribute.
+ * @throws {Error} If attribute does not exist.
+ * @throws {Error} If attribute is unqualified and ambiguous.
+ */
 Engine.prototype.resolveAttribute = function(attribute, attributeList) {
     var matches = null;
     if (attribute.qualifier) {
@@ -54,6 +78,15 @@ Engine.prototype.resolveAttribute = function(attribute, attributeList) {
     }
 };
 
+/**
+ * Attempts to resolve all of the attributes within the given predicate
+ * tree to a fully qualified attribute within the attribute list, and 
+ * ensure that the compared types match.
+ * @param  {object}        tree          Predicate.
+ * @param  {array<object>} attributeList List of fully qualified attributes.
+ * @return {object}                      New tree with fully qualified attributes.
+ * @throws {Error} If two compared attributes in the tree have mismatching types.
+ */
 Engine.prototype.resolvePredicate = function(tree, attributeList) {
     var lhs, rhs;
 
@@ -89,12 +122,24 @@ Engine.prototype.resolvePredicate = function(tree, attributeList) {
     return { lhs: lhs, rhs: rhs, op: tree.op };
 };
 
+/**
+ * Tests whether x and y have matching types.
+ * @param  {object|string|number} x 
+ * @param  {object|string|number} y 
+ * @return {boolean}               
+ */ 
 Engine.prototype.compareTypes = function(x, y) {
     var xType = (x.type) ? x.type : typeof x;
     var yType = (y.type) ? y.type : typeof y;
     return xType === yType;
 };
 
+/**
+ * Performs a projection on the given relation.
+ * @param  {object} relation   Relation to operate on.
+ * @param  {array}  projection List of attributes to project.
+ * @return {object}            New projected relation.
+ */
 Engine.prototype.project = function(relation, projection) {
     var resolved = projection.map(projection => {
         return this.resolveAttribute(projection, relation.attributes);
@@ -102,6 +147,12 @@ Engine.prototype.project = function(relation, projection) {
     return ops.projection(resolved, relation);
 };
 
+/**
+ * Performs a selection on the given relation.
+ * @param  {object} relation  Relation to operate on.
+ * @param  {object} predicate Predicate tree containing comparisons.
+ * @return {object}           New relation after selection.
+ */
 Engine.prototype.select = function(relation, predicate) {
     var resolved = this.resolvePredicate(predicate, relation.attributes);
     return ops.selection(resolved, relation);

@@ -19,53 +19,53 @@ ParserTest.prototype.it_is_a_Parser = function() {
 };
 
 ParserTest.prototype.it_can_consume_the_current_token_and_get_the_next_one = function() {
-    this.assertStrictlyEqual('<SELECT, null>', this.parser.lookahead.toString());
+    this.assertEqual('<SELECT, null>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<ID, t1>', this.parser.lookahead.toString());
+    this.assertEqual('<ID, t1>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<DOT, null>', this.parser.lookahead.toString());
+    this.assertEqual('<DOT, null>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<ID, number>', this.parser.lookahead.toString());
+    this.assertEqual('<ID, number>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<EQL, null>', this.parser.lookahead.toString());
+    this.assertEqual('<EQL, null>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<NUMBER, 13>', this.parser.lookahead.toString());
+    this.assertEqual('<NUMBER, 13>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<(, null>', this.parser.lookahead.toString());
+    this.assertEqual('<(, null>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<ID, t1>', this.parser.lookahead.toString());
+    this.assertEqual('<ID, t1>', this.parser.lookahead.toString());
     this.parser.consume();
-    this.assertStrictlyEqual('<), null>', this.parser.lookahead.toString());
+    this.assertEqual('<), null>', this.parser.lookahead.toString());
 };
 
 ParserTest.prototype.it_can_match_the_lookahead_token_to_a_token_type_which_consumes_the_current_token_if_they_match = function() {
-    this.assertStrictlyEqual(tokenTypes.SELECT, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.SELECT, this.parser.lookahead.type);
     this.parser.match(tokenTypes.SELECT);
-    this.assertStrictlyEqual(tokenTypes.ID, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.ID, this.parser.lookahead.type);
     this.parser.match(tokenTypes.ID);
-    this.assertStrictlyEqual(tokenTypes.DOT, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.DOT, this.parser.lookahead.type);
     this.parser.match(tokenTypes.DOT);
-    this.assertStrictlyEqual(tokenTypes.ID, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.ID, this.parser.lookahead.type);
     this.parser.match(tokenTypes.ID);
-    this.assertStrictlyEqual(tokenTypes.EQL, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.EQL, this.parser.lookahead.type);
     this.parser.match(tokenTypes.EQL);
-    this.assertStrictlyEqual(tokenTypes.NUMBER, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.NUMBER, this.parser.lookahead.type);
     this.parser.match(tokenTypes.NUMBER);
-    this.assertStrictlyEqual(tokenTypes.LPAREN, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.LPAREN, this.parser.lookahead.type);
     this.parser.match(tokenTypes.LPAREN);
-    this.assertStrictlyEqual(tokenTypes.ID, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.ID, this.parser.lookahead.type);
     this.parser.match(tokenTypes.ID);
-    this.assertStrictlyEqual(tokenTypes.RPAREN, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.RPAREN, this.parser.lookahead.type);
     this.parser.match(tokenTypes.RPAREN);
-    this.assertStrictlyEqual(tokenTypes.EOF, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.EOF, this.parser.lookahead.type);
     this.parser.match(tokenTypes.EOF);
 };
 
 ParserTest.prototype.it_throws_an_error_and_does_not_consume_when_tokens_do_not_match = function() {
-    this.assertStrictlyEqual(tokenTypes.SELECT, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.SELECT, this.parser.lookahead.type);
     this.expectError(function() { this.match(tokenTypes.PROJECT); }.bind(this.parser),
         'Type mismatch; Expecting PROJECT but found SELECT');
-    this.assertStrictlyEqual(tokenTypes.SELECT, this.parser.lookahead.type);
+    this.assertEqual(tokenTypes.SELECT, this.parser.lookahead.type);
 };
 
 ParserTest.prototype.it_can_parse_a_positive_number = function() {
@@ -73,7 +73,7 @@ ParserTest.prototype.it_can_parse_a_positive_number = function() {
     var actual = this.parser.number();
     var expected = new Ast(tokenTypes.NUMBER, '452');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_negative_number = function() {
@@ -82,7 +82,7 @@ ParserTest.prototype.it_can_parse_a_negative_number = function() {
     var expected = new Ast(tokenTypes.MINUS);
     expected.addChild(new Ast(tokenTypes.NUMBER, '13'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());     
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());     
 };
 
 ParserTest.prototype.it_can_parse_an_attribute_as_an_id = function() {
@@ -90,8 +90,8 @@ ParserTest.prototype.it_can_parse_an_attribute_as_an_id = function() {
     var actual = this.parser.attribute();
     var expected = new Ast(tokenTypes.ID, 'table1');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_an_attribute_as_a_fully_qualified_name = function() {
@@ -101,7 +101,7 @@ ParserTest.prototype.it_can_parse_an_attribute_as_a_fully_qualified_name = funct
     expected.addChild(new Ast(tokenTypes.ID, 'table1'));
     expected.addChild(new Ast(tokenTypes.ID, 'attribute1'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_list_of_comma_separated_attributes = function() {
@@ -118,7 +118,7 @@ ParserTest.prototype.it_can_parse_a_list_of_comma_separated_attributes = functio
     item3.addChild(new Ast(tokenTypes.ID, 'a4'));
     expected.addChild(item3);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_string = function() {
@@ -126,8 +126,8 @@ ParserTest.prototype.it_can_parse_a_string = function() {
     var actual = this.parser.string();
     var expected = new Ast(tokenTypes.STRING, '123this_is_A_STr1ng!');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_an_attribute_as_a_comparable_value = function() {
@@ -135,7 +135,7 @@ ParserTest.prototype.it_can_parse_an_attribute_as_a_comparable_value = function(
     var actual = this.parser.comparable();
     var expected = new Ast(tokenTypes.ID, 'foo1');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_fully_qualified_attribute_as_a_comparable_value = function() {
@@ -145,7 +145,7 @@ ParserTest.prototype.it_can_parse_a_fully_qualified_attribute_as_a_comparable_va
     expected.addChild(new Ast(tokenTypes.ID, 'foo1'));
     expected.addChild(new Ast(tokenTypes.ID, 'bar2'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_number_as_a_comparable_value = function() {
@@ -153,8 +153,8 @@ ParserTest.prototype.it_can_parse_a_number_as_a_comparable_value = function() {
     var actual = this.parser.comparable();
     var expected = new Ast(tokenTypes.NUMBER, '24612');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_a_negative_number_as_a_comparable_value = function() {
@@ -163,7 +163,7 @@ ParserTest.prototype.it_can_parse_a_negative_number_as_a_comparable_value = func
     var expected = new Ast(tokenTypes.MINUS);
     expected.addChild(new Ast(tokenTypes.NUMBER, '1442'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_string_as_a_comparable_value = function() {
@@ -171,7 +171,7 @@ ParserTest.prototype.it_can_parse_a_string_as_a_comparable_value = function() {
     var actual = this.parser.comparable();
     var expected = new Ast(tokenTypes.STRING, '#@!@str1ng_!#');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_throws_an_error_when_a_comparable_value_is_not_an_attribute_or_string_or_number = function() {
@@ -185,8 +185,8 @@ ParserTest.prototype.it_can_parse_less_than_as_a_comparison_operator = function(
     var actual = this.parser.compareOp();
     var expected = new Ast(tokenTypes.LESS);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_less_than_or_equal_to_as_a_comparison_operator = function() {
@@ -194,13 +194,13 @@ ParserTest.prototype.it_can_parse_less_than_or_equal_to_as_a_comparison_operator
     var actual = this.parser.compareOp();
     var expected = new Ast(tokenTypes.LEQ);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 
     actual = this.parser.compareOp();
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_greater_than_as_a_comparison_operator = function() {
@@ -208,8 +208,8 @@ ParserTest.prototype.it_can_parse_greater_than_as_a_comparison_operator = functi
     var actual = this.parser.compareOp();
     var expected = new Ast(tokenTypes.GRTR);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_greater_than_or_equal_to_as_a_comparison_operator = function() {
@@ -217,13 +217,13 @@ ParserTest.prototype.it_can_parse_greater_than_or_equal_to_as_a_comparison_opera
     var actual = this.parser.compareOp();
     var expected = new Ast(tokenTypes.GEQ);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 
     actual = this.parser.compareOp();
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_equal_to_as_a_comparison_operator = function() {
@@ -231,8 +231,8 @@ ParserTest.prototype.it_can_parse_equal_to_as_a_comparison_operator = function()
     var actual = this.parser.compareOp();
     var expected = new Ast(tokenTypes.EQL);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_not_equal_to_as_a_comparison_operator = function() {
@@ -240,13 +240,13 @@ ParserTest.prototype.it_can_parse_not_equal_to_as_a_comparison_operator = functi
     var actual = this.parser.compareOp();
     var expected = new Ast(tokenTypes.NEQ);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 
     actual = this.parser.compareOp();
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
-    this.assertStrictlyEqual(expected.toString(), actual.toString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toString(), actual.toString());
 };
 
 ParserTest.prototype.it_can_parse_a_comparison = function() {
@@ -259,7 +259,7 @@ ParserTest.prototype.it_can_parse_a_comparison = function() {
     expected.addChild(attribute);
     expected.addChild(new Ast(tokenTypes.STRING, 'foo bar baz'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_comparison_as_an_operand = function() {
@@ -269,7 +269,7 @@ ParserTest.prototype.it_can_parse_a_comparison_as_an_operand = function() {
     expected.addChild(new Ast(tokenTypes.ID, 'foo'));
     expected.addChild(new Ast(tokenTypes.NUMBER, '223'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_an_operand_inside_of_parens = function() {
@@ -285,7 +285,7 @@ ParserTest.prototype.it_can_parse_an_operand_inside_of_parens = function() {
     expected.addChild(lhs);
     expected.addChild(rhs);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_negated_operand = function() {
@@ -303,7 +303,7 @@ ParserTest.prototype.it_can_parse_a_negated_operand = function() {
     geq.addChild(rhs);
     expected.addChild(geq);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_conjunction_of_operands = function() {
@@ -319,7 +319,7 @@ ParserTest.prototype.it_can_parse_a_conjunction_of_operands = function() {
     expected.addChild(operand1);
     expected.addChild(operand2);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_a_conjunction_with_left_associativity = function() {
@@ -341,7 +341,7 @@ ParserTest.prototype.it_parses_a_conjunction_with_left_associativity = function(
     expected.addChild(child1);
     expected.addChild(child2);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_disjunction_of_conjunctions = function() {
@@ -369,7 +369,7 @@ ParserTest.prototype.it_can_parse_a_disjunction_of_conjunctions = function() {
     expected.addChild(conjunction1);
     expected.addChild(conjunction2);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_a_disjunction_with_left_associativity = function() {
@@ -391,7 +391,7 @@ ParserTest.prototype.it_parses_a_disjunction_with_left_associativity = function(
     expected.addChild(child1);
     expected.addChild(child2);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_precedence_of_predicate_operations_with_parenthesization = function() {
@@ -413,7 +413,7 @@ ParserTest.prototype.it_can_change_precedence_of_predicate_operations_with_paren
     expected.addChild(child1);
     expected.addChild(child2);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_associativity_of_predicate_operations_with_parenthesization = function() {
@@ -435,7 +435,7 @@ ParserTest.prototype.it_can_change_associativity_of_predicate_operations_with_pa
     expected.addChild(child1);
     expected.addChild(child2);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_an_id_as_a_relation = function() {
@@ -443,7 +443,7 @@ ParserTest.prototype.it_can_parse_an_id_as_a_relation = function() {
     var actual = this.parser.relation();
     var expected = new Ast(tokenTypes.RELATION, 'table1');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_parenthesized_relation = function() {
@@ -451,7 +451,7 @@ ParserTest.prototype.it_can_parse_a_parenthesized_relation = function() {
     var actual = this.parser.relation();
     var expected = new Ast(tokenTypes.RELATION, 'table2');
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_project_statement_as_a_relation = function() {
@@ -468,7 +468,7 @@ ParserTest.prototype.it_can_parse_a_project_statement_as_a_relation = function()
     expected.addChild(list);
     expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_select_statement_as_a_relation = function() {
@@ -481,7 +481,7 @@ ParserTest.prototype.it_can_parse_a_select_statement_as_a_relation = function() 
     expected.addChild(predicate);
     expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_rename_statement_with_no_attributes_as_a_relation = function() {
@@ -491,7 +491,7 @@ ParserTest.prototype.it_can_parse_a_rename_statement_with_no_attributes_as_a_rel
     expected.addChild(new Ast(tokenTypes.ID, 'foo'));
     expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_rename_statement_with_a_list_of_attributes_as_a_relation = function() {
@@ -506,7 +506,7 @@ ParserTest.prototype.it_can_parse_a_rename_statement_with_a_list_of_attributes_a
     expected.addChild(list);
     expected.addChild(new Ast(tokenTypes.RELATION, 't1'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_throws_an_error_when_a_rename_statement_has_an_empty_attributes_list = function() {
@@ -528,7 +528,7 @@ ParserTest.prototype.it_can_parse_a_cartesian_product = function() {
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_cartesian_product_with_left_associativity = function() {
@@ -541,7 +541,7 @@ ParserTest.prototype.it_parses_cartesian_product_with_left_associativity = funct
     expected.addChild(child);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_associativity_of_cartesian_product_with_parenthesization = function() {
@@ -554,7 +554,7 @@ ParserTest.prototype.it_can_change_associativity_of_cartesian_product_with_paren
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_a_join = function() {
@@ -564,7 +564,7 @@ ParserTest.prototype.it_can_parse_a_join = function() {
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_join_with_left_associativity = function() {
@@ -577,7 +577,7 @@ ParserTest.prototype.it_parses_join_with_left_associativity = function() {
     expected.addChild(child);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_associativity_of_join_with_parenthesization = function() {
@@ -590,7 +590,7 @@ ParserTest.prototype.it_can_change_associativity_of_join_with_parenthesization =
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_difference = function() {
@@ -600,7 +600,7 @@ ParserTest.prototype.it_can_parse_difference = function() {
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_difference_with_left_associativity = function() {
@@ -613,7 +613,7 @@ ParserTest.prototype.it_parses_difference_with_left_associativity = function() {
     expected.addChild(child);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_associativity_of_difference_with_parenthesization = function() {
@@ -626,7 +626,7 @@ ParserTest.prototype.it_can_change_associativity_of_difference_with_parenthesiza
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_union = function() {
@@ -636,7 +636,7 @@ ParserTest.prototype.it_can_parse_union = function() {
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_union_with_left_associativity = function() {
@@ -649,7 +649,7 @@ ParserTest.prototype.it_parses_union_with_left_associativity = function() {
     expected.addChild(child);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_associativity_of_union_with_parenthesization = function() {
@@ -662,7 +662,7 @@ ParserTest.prototype.it_can_change_associativity_of_union_with_parenthesization 
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_parse_intersection = function() {
@@ -672,7 +672,7 @@ ParserTest.prototype.it_can_parse_intersection = function() {
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(new Ast(tokenTypes.RELATION, 'r2'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_intersection_with_left_associativity = function() {
@@ -685,7 +685,7 @@ ParserTest.prototype.it_parses_intersection_with_left_associativity = function()
     expected.addChild(child);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_associativity_of_intersection_with_parenthesization = function() {
@@ -698,7 +698,7 @@ ParserTest.prototype.it_can_change_associativity_of_intersection_with_parenthesi
     expected.addChild(new Ast(tokenTypes.RELATION, 'r1'));
     expected.addChild(child);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_parses_union_and_intersection_with_the_same_precedence = function() {
@@ -711,7 +711,7 @@ ParserTest.prototype.it_parses_union_and_intersection_with_the_same_precedence =
     expected.addChild(child);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 
     this.parser = new Parser(new Lexer('r1 ∩ r2 ∪ r3'));
     actual = this.parser.unionIntersection();
@@ -722,7 +722,7 @@ ParserTest.prototype.it_parses_union_and_intersection_with_the_same_precedence =
     expected.addChild(child);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r3'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = function() {
@@ -744,7 +744,7 @@ ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = functi
     diff.addChild(njoin);
     expected.addChild(diff);
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 
     this.parser = new Parser(new Lexer('r1 × r2 ⨝ r3 − r4 ∪ r5 ∩ r6'));
     actual = this.parser.unionIntersection();
@@ -764,7 +764,7 @@ ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = functi
     expected.addChild(union);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r6'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 ParserTest.prototype.it_can_change_precedence_of_set_operations_with_parenthesization = function() {
@@ -786,7 +786,7 @@ ParserTest.prototype.it_can_change_precedence_of_set_operations_with_parenthesiz
     expected.addChild(njoin);
     expected.addChild(new Ast(tokenTypes.RELATION, 'r6'));
 
-    this.assertStrictlyEqual(expected.toTreeString(), actual.toTreeString());
+    this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
 

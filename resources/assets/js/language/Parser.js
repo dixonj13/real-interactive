@@ -41,6 +41,10 @@ class Parser {
         }
     }
 
+    /**
+     * Parses a positive or negative number.
+     * @return {Ast} 
+     */
     number() {
         var node, token;
         if (this.lookahead.type === tokenTypes.MINUS) {
@@ -58,6 +62,11 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses an attribute which can be a single value
+     * or a qualifier and a value separated by a dot.
+     * @return {Ast}
+     */
     attribute() {
         var node;
         var token = this.lookahead;
@@ -75,6 +84,10 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses a list of comma separated attributes.
+     * @return {Ast} 
+     */
     attributes() {
         var node = new Ast(tokenTypes.LIST);
         node.addChild(this.attribute());
@@ -85,12 +98,22 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses a string surrounded by double parenthesis.
+     * @return {Ast} 
+     */
     string() {
         var token = this.lookahead;
         this.match(tokenTypes.STRING);
         return new Ast(token);
     }
 
+    /**
+     * Parses a comparable value, which can be an attribute,
+     * number, or string.
+     * @return {Ast}
+     * @throws {Error} If lookahead is not a comparable value.
+     */
     comparable() {
         if (this.lookahead.type === tokenTypes.ID)
             return this.attribute();
@@ -102,6 +125,11 @@ class Parser {
         throw new Error('Expected comparable value, but found ' + this.lookahead.toString());
     }
 
+    /**
+     * Parses a comparison operator.
+     * @return {Ast} 
+     * @throws {Error} If lookahead is not a comparison operator.
+     */
     compareOp() {
         var token = this.lookahead;
         if (this.lookahead.type === tokenTypes.LESS) {
@@ -131,6 +159,12 @@ class Parser {
         throw new Error('Expected comparison operator, but found ' + this.lookahead.toString());
     }
 
+    /**
+     * Parses a comparison made up of a lhs comparable value,
+     * a comparison operator, and a rhs comparable value.
+     * @return {Ast}
+     * @throws {Error}
+     */
     comparison() {
         var lhs = this.attribute();
         var compareOp = this.compareOp();
@@ -140,6 +174,12 @@ class Parser {
         return compareOp;
     }
 
+    /**
+     * Parses the operand of a predicate, beginning with 
+     * a not, left paren, or comparable value.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     operand() {
         var node;
         if (this.lookahead.type === tokenTypes.NOT) {
@@ -163,6 +203,12 @@ class Parser {
         throw new Error(`Expected start of operand, but found ${this.lookahead.type}`);
     }
 
+    /**
+     * Parses a logical conjunction, beginning with a not, 
+     * left paren, or comparable value.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     conjunction() {
         var node = this.operand();
         while (this.lookahead.type === tokenTypes.AND) {
@@ -176,6 +222,12 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses a logical disjunction, beginning with a not, 
+     * left paren, or comparable value.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     disjunction() {
         var node = this.conjunction();
         while (this.lookahead.type === tokenTypes.OR) {
@@ -189,6 +241,13 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses a relation beginning with a projection, selection, 
+     * rename left paren, or id, which can be the result of one 
+     * or more operations on any number of other relations.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     relation() {
         var node;
         if (this.lookahead.type === tokenTypes.PROJECT) {
@@ -238,6 +297,11 @@ class Parser {
         throw new Error(`Expected start of relation but found ${this.lookahead.type}`);
     }
 
+    /**
+     * Parses the cartesian product of two relations.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     cartesianProduct() {
         var node = this.relation();
         while (this.lookahead.type === tokenTypes.CPROD) {
@@ -251,6 +315,11 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses the joining of two relations.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     join() {
         var node = this.cartesianProduct();
         while (this.lookahead.type === tokenTypes.NJOIN) {
@@ -264,6 +333,11 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses the difference of two relations.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     difference() {
         var node = this.join();
         while (this.lookahead.type === tokenTypes.DIFF) {
@@ -277,6 +351,11 @@ class Parser {
         return node;
     }
 
+    /**
+     * Parses the union or intersection of two relations.
+     * @return {Ast} 
+     * @throws {Error}
+     */
     unionIntersection() {
         var node = this.difference();
         while (this.lookahead.type === tokenTypes.UNION ||

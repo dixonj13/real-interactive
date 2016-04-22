@@ -15,13 +15,13 @@ TokenTest.prototype.it_is_a_Token = function() {
 };
 
 TokenTest.prototype.it_has_a_type = function() {
-    this.assertStrictlyEqual(this.token.type, 'FOO');
+    this.assertEqual(this.token.type, 'FOO');
 };
 
 TokenTest.prototype.it_has_a_value = function() {
-    this.assertStrictlyEqual(this.token.value, 'bar');
+    this.assertEqual(this.token.value, 'bar');
 };
 
 TokenTest.prototype.it_has_a_string_representation = function() {
-    this.assertStrictlyEqual(this.token.toString(), '<FOO, bar>');
+    this.assertEqual(this.token.toString(), '<FOO, bar>');
 };
