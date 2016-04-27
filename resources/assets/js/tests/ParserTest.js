@@ -748,6 +748,7 @@ ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = functi
 
     this.parser = new Parser(new Lexer('r1 × r2 ⨝ r3 − r4 ∪ r5 ∩ r6'));
     actual = this.parser.unionIntersection();
+    console.log(actual);
     expected = new Ast(tokenTypes.ISECT);
     cprod = new Ast(tokenTypes.CPROD);
     cprod.addChild(new Ast(tokenTypes.RELATION, 'r1'));

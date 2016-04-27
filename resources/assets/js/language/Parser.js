@@ -374,6 +374,15 @@ class Parser {
         }
         return node;
     }
+
+    /**
+     * Parses a relational algebra statement into
+     * an abstract sytanx tree.
+     * @return {Ast}
+     */
+    parse() {
+        return this.unionIntersection();
+    }
 }
 
 export default Parser;

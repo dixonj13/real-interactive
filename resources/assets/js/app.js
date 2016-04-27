@@ -1,3 +1,4 @@
+
 import Ast from './language/Ast';
 import Lexer from './language/Lexer';
 import Parser from './language/Parser';
@@ -7,104 +8,89 @@ import { Relation } from './query_tools/Relation';
 import { tokenTypes } from './language/TokenTypes';
 import { Visitor as EvalVisitor } from './language/visitors/EvalVisitor';
 
+import * as editor from './editor/editor.js';
+
 var data = {
-    'movies': new Relation(
+    'countries': new Relation(
         [
-            { 'attribute': 'id', 'qualifier': 'movies', 'type': 'number' },
-            { 'attribute': 'title', 'qualifier': 'movies', 'type': 'string' },
-            { 'attribute': 'year', 'qualifier': 'movies', 'type': 'number' },
+            { 'attribute': 'name', 'qualifier': 'countries', 'type': 'string' },
+            { 'attribute': 'code', 'qualifier': 'countries', 'type': 'string' },
+            { 'attribute': 'founded', 'qualifier': 'countries', 'type': 'number' },
         ],
         [
-            { 'movies.id': 1, 'movies.title': 'Drive', 'movies.year': 2007 },
-            { 'movies.id': 2, 'movies.title': 'Brooklyn', 'movies.year': 2015 },
-            { 'movies.id': 3, 'movies.title': 'Gladiator', 'movies.year': 2000 },
-            { 'movies.id': 4, 'movies.title': 'Armageddon', 'movies.year': 1998 },
-            { 'movies.id': 5, 'movies.title': 'Ratatoullie', 'movies.year': 2007 },
+            { 'countries.name': 'United States', 'countries.code': 'US', 'countries.founded': 1776 },
+            { 'countries.name': 'Argentina', 'countries.code': 'AR', 'countries.founded': 1816 },
+            { 'countries.name': 'Yemen', 'countries.code': 'YE', 'countries.founded': 1990 },
+            { 'countries.name': 'Ghana', 'countries.code': 'GH', 'countries.founded': 1957 },
+            { 'countries.name': 'Mongolia', 'countries.code': 'MO', 'countries.founded': 1207 },
+            { 'countries.name': 'New Zealand', 'countries.code': 'NZ', 'countries.founded': 1840 },
         ]
     ),
-    'lists': new Relation(
+    'lakes': new Relation(
         [
-            { 'attribute': 'id', 'qualifier': 'lists', 'type': 'number' },
-            { 'attribute': 'movie_id', 'qualifier': 'lists', 'type': 'number' },
+            { 'attribute': 'name', 'qualifier': 'lakes', 'type': 'string' },
+            { 'attribute': 'country', 'qualifier': 'lakes', 'type': 'string' },
+            { 'attribute': 'surface_area', 'qualifier': 'lakes', 'type': 'number' },
         ],
         [
-            { 'lists.id': 1, 'lists.movie_id': 2 },
-            { 'lists.id': 1, 'lists.movie_id': 3 },
-            { 'lists.id': 2, 'lists.movie_id': 1 },
-            { 'lists.id': 2, 'lists.movie_id': 4 },
-            { 'lists.id': 2, 'lists.movie_id': 5 },
+            { 'lakes.name': 'Taupo', 'lakes.country': 'NZ', 'lakes.surface_area': 616 },
+            { 'lakes.name': 'Khyargas', 'lakes.country': 'MO', 'lakes.surface_area': 1407 },
+            { 'lakes.name': 'Umiam', 'lakes.country': 'IN', 'lakes.surface_area': 220 },
+            { 'lakes.name': 'Volta', 'lakes.country': 'GH', 'lakes.surface_area': 8502 },
+            { 'lakes.name': 'Erie', 'lakes.country': 'US', 'lakes.surface_area': 9910 },
+            { 'lakes.name': 'Bosumtwi', 'lakes.country': 'GH', 'lakes.surface_area': 49 },
+            { 'lakes.name': 'Jordan', 'lakes.country': 'US', 'lakes.surface_area': 129 },
+            { 'lakes.name': 'Superior', 'lakes.country': 'US', 'lakes.surface_area': 31700 },
+            { 'lakes.name': 'Sangiin Dalai', 'lakes.country': 'MO', 'lakes.surface_area': 165 },
+            { 'lakes.name': 'Nahuel Huapi', 'lakes.country': 'AR', 'lakes.surface_area': 530 },
+            { 'lakes.name': 'Uvs', 'lakes.country': 'MO', 'lakes.surface_area': 3350 },
+            { 'lakes.name': 'Wanaka', 'lakes.country': 'NZ', 'lakes.surface_area': 192 },
         ]
     ),
+    'population': new Relation(
+        [
+            { 'attribute': 'country', 'qualifier': 'population', 'type': 'string' },
+            { 'attribute': 'number', 'qualifier': 'population', 'type': 'number' },
+        ],
+        [
+            { 'population.country': 'IN', 'population.number': 1252000000 },
+            { 'population.country': 'NZ', 'population.number': 4471000 },
+            { 'population.country': 'AR', 'population.number': 40412000 },
+            { 'population.country': 'MO', 'population.number': 2839000 },
+            { 'population.country': 'YE', 'population.number': 24410000 },
+            { 'population.country': 'US', 'population.number': 318900000 },
+            { 'population.country': 'GH', 'population.number': 25900000 },
+            { 'population.country': 'IE', 'population.number': 4595000 },
+        ]
+    ),
+    'area': new Relation(
+        [
+            { 'attribute': 'country', 'qualifier': 'area', 'type': 'string' },
+            { 'attribute': 'number', 'qualifier': 'area', 'type': 'number' },
+        ],
+        [
+            { 'area.country': 'NZ', 'area.number': 103483 },
+            { 'area.country': 'GH', 'area.number': 92099 },
+            { 'area.country': 'US', 'area.number': 3806000 },
+            { 'area.country': 'MO', 'area.number': 604600 },
+            { 'area.country': 'IN', 'area.number': 1269000 },
+            { 'area.country': 'YE', 'area.number': 203891 },
+            { 'area.country': 'ES', 'area.number': 194845 },
+            { 'area.country': 'AR', 'area.number': 1074000 },
+            { 'area.country': 'ZW', 'area.number': 150872 },
+        ]
+    )
 };
-table.update('movies', data.movies.qualifiedAttributes(), data.movies.tuples, '#data');
 
-var input = 'π title, movies.year (movies)';
-var lexer = new Lexer(input);
-var parser = new Parser(lexer);
-var tree = parser.relation();
-console.log(tree.toTreeString());
+editor.init(data);
 
-var engine = new Engine(data);
-var visitor = new EvalVisitor(engine);
-var r = tree.visit(visitor);
-console.log(r);
+Object.keys(data).forEach(key =>    {
+    var name = key;
+    var relation = data[key];
+    table.update(key, relation.qualifiedAttributes(), relation.tuples, '#dataSet');
+});
 
-table.update(null, r.qualifiedAttributes(), r.tuples, '#output');
 
-input = 'σ (movies.year > 2007 ∨ title = "Gladiator") ∧ (id > 1) (movies)';
-lexer = new Lexer(input);
-parser = new Parser(lexer);
-tree = parser.relation();
-console.log(tree.toTreeString());
-
-r = tree.visit(visitor);
-console.log(r);
-
-table.update(null, r.qualifiedAttributes(), r.tuples, '#output2');
-
-input = 'π title, movies.year (σ (movies.year > 2007 ∨ title = "Gladiator") ∧ (id > 1) (movies))';
-lexer = new Lexer(input);
-parser = new Parser(lexer);
-tree = parser.relation();
-console.log(tree.toTreeString());
-
-r = tree.visit(visitor);
-console.log(r);
-
-table.update(null, r.qualifiedAttributes(), r.tuples, '#output3');
-
-input = 'σ 4 = 4 ∨ title = "nothing" (movies))';
-lexer = new Lexer(input);
-parser = new Parser(lexer);
-tree = parser.relation();
-console.log(tree.toTreeString());
-
-r = tree.visit(visitor);
-console.log(r);
-
-table.update(null, r.qualifiedAttributes(), r.tuples, '#output4');
-
-input = 'ρ films (movies)';
-lexer = new Lexer(input);
-parser = new Parser(lexer);
-tree = parser.relation();
-console.log(tree.toTreeString());
-
-r = tree.visit(visitor);
-console.log(r);
-
-table.update(null, r.qualifiedAttributes(), r.tuples, '#output5');
-
-input = 'ρ films [identifier, movies.title, released] (movies)';
-lexer = new Lexer(input);
-parser = new Parser(lexer);
-tree = parser.relation();
-console.log(tree.toTreeString());
-
-r = tree.visit(visitor);
-console.log(r);
-
-table.update(null, r.qualifiedAttributes(), r.tuples, '#output6');
 
 
 
