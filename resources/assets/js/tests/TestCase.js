@@ -9,16 +9,20 @@ export var TestCase = function() {};
 /**
  * Runner calls all test methods.
  * To denote a test method, prepend 'it_' or 'test_' to the method name.
+ * @returns {integer} Number of tests run.
  */
 TestCase.prototype.run = function() {
+    var num = 0;
     for (var p in this) {
         if (typeof this[p] == 'function' && 
             (p.substr(0, 3) == 'it_' || p.substr(0, 5) == 'test_')) {
             this.setUp();
             this[p]();
             this.tearDown();
+            num++;
         }
     }
+    return num;
 };
 
 /**
@@ -44,7 +48,19 @@ TestCase.prototype.tearDown = function() {
  */
 TestCase.prototype.assertEqual = function(x, y) {
     if ( ! _.isEqual(x, y) ) {
-        var e = new Error(`Assertion failed; Expected ${x} but received ${y}!`);
+        var e = new Error(`Assertion failed; Expected ${x} to be equal to ${y}!`);
+        console.log(e.stack);
+    }
+};
+
+/**
+ * Asserts that x and y are not equal.
+ * @param {*} x 
+ * @param {*} y 
+ */
+TestCase.prototype.assertNotEqual = function(x, y) {
+    if (_.isEqual(x, y) ) {
+        var e = new Error(`Assertion failed; Expected ${x} not to be equal to ${y}!`);
         console.log(e.stack);
     }
 };

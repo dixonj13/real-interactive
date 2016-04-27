@@ -166,7 +166,7 @@ class Parser {
      * @throws {Error}
      */
     comparison() {
-        var lhs = this.attribute();
+        var lhs = this.comparable();
         var compareOp = this.compareOp();
         var rhs = this.comparable();
         compareOp.addChild(lhs);
@@ -197,7 +197,9 @@ class Parser {
             this.match(tokenTypes.RPAREN);
             return node;
         }
-        if (this.lookahead.type === tokenTypes.ID) {
+        if (this.lookahead.type === tokenTypes.ID ||
+            this.lookahead.type === tokenTypes.NUMBER ||
+            this.lookahead.type === tokenTypes.STRING) {
             return this.comparison();
         }
         throw new Error(`Expected start of operand, but found ${this.lookahead.type}`);

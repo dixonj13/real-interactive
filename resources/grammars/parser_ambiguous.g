@@ -35,7 +35,7 @@ CONJUNCTION -> OPERAND {"and" OPERAND}
 OPERAND     -> "not" "(" DISJUNCTION ")"
              | "(" DISJUNCTION ")"
              | COMPARISON
-COMPARISON  -> ATTRIBUTE compare_op COMPARABLE
+COMPARISON  -> COMPARABLE compare_op COMPARABLE
 COMPARABLE  -> ATTRIBUTE
              | NUMBER
              | string
