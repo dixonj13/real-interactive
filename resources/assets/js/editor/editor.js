@@ -3,10 +3,12 @@ var d3 = require('d3');
 
 import Lexer from '../language/Lexer';
 import Parser from '../language/Parser';
+import * as tree from '../visualizations/tree';
 import * as table from '../visualizations/table';
 import { Engine } from '../query_tools/Engine';
 import { Relation } from '../query_tools/Relation';
 import { Visitor as EvalVisitor } from '../language/visitors/EvalVisitor';
+import { Visitor as RelationTreeVisitor } from '../language/visitors/RelationTreeVisitor';
 
 export function init(data) {
 
@@ -24,17 +26,22 @@ export function init(data) {
                 var parser = new Parser(lexer);
                 var ast = parser.parse();
 
-                var engine = new Engine(data);
-                var visitor = new EvalVisitor(engine);
-                var relation = ast.visit(visitor);
+                var relation = ast.visit(new EvalVisitor(new Engine(data)));
+                var relationTree = ast.visit(new RelationTreeVisitor());
 
                 $('#errors').hide();
                 $('#answer').empty();
+                $('#tree').empty();
+
+                tree.update(relationTree, '#tree', relation => {
+                    $('#answer').empty();
+                    table.update(null, relation.qualifiedAttributes(), relation.tuples, '#answer');
+                });
                 table.update(null, relation.qualifiedAttributes(), relation.tuples, '#answer');
-                console.log(d3.select('#answer').node().getBoundingClientRect());
             } catch (error) {
                 $('#errors').show();
                 $('#errors').text(error.message);
+                console.log(error);
             }
         }
     });

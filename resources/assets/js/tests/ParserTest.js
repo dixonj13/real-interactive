@@ -748,7 +748,6 @@ ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = functi
 
     this.parser = new Parser(new Lexer('r1 × r2 ⨝ r3 − r4 ∪ r5 ∩ r6'));
     actual = this.parser.unionIntersection();
-    console.log(actual);
     expected = new Ast(tokenTypes.ISECT);
     cprod = new Ast(tokenTypes.CPROD);
     cprod.addChild(new Ast(tokenTypes.RELATION, 'r1'));
@@ -788,6 +787,13 @@ ParserTest.prototype.it_can_change_precedence_of_set_operations_with_parenthesiz
     expected.addChild(new Ast(tokenTypes.RELATION, 'r6'));
 
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
+};
+
+ParserTest.prototype.it_throws_an_error_if_parser_is_done_but_there_is_more_input = function() {
+    this.parser = new Parser(new Lexer('r1 r2'));
+
+    this.expectError(function() { this.parse(); }.bind(this.parser),
+        'Expected end of input, but found ID.');
 };
 
 

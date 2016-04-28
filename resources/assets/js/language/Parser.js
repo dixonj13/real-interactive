@@ -381,7 +381,10 @@ class Parser {
      * @return {Ast}
      */
     parse() {
-        return this.unionIntersection();
+        var parsed = this.unionIntersection();
+        if (this.lookahead.type !== tokenTypes.EOF)
+            throw new Error(`Expected end of input, but found ${this.lookahead.type}.`);
+        return parsed;
     }
 }
 
