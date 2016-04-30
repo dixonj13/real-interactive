@@ -13,7 +13,7 @@ class Ast {
      */
     constructor(token = null, value = null) {
         this.children = null;
-        if(token instanceof Token)
+        if (token instanceof Token)
             this.token = token;
         else
             this.token = new Token(token, value);
@@ -106,10 +106,10 @@ class Ast {
     }
 
     /**
-     * calls the given visitor with the node, based
+     * Calls the given visitor with the node, based
      * on the node's type.
      * @param  {visitor} visitor
-     * @return {null}         
+     * @return {*}         
      */
     visit(visitor) {
         return visitor.visit[this.getNodeType()].call(visitor, this);

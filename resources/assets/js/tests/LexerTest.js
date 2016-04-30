@@ -12,22 +12,32 @@ LexerTest.prototype.setUp = function() {
     this.lexer = new Lexer('foo');
 };
 
+// REQ-ID: LEXER_1
+// TEST-ID: 1
 LexerTest.prototype.it_is_a_Lexer = function() {
     this.assertTrue(this.lexer instanceof Lexer);
 };
 
+// REQ-ID: LEXER_1
+// TEST-ID: 2
 LexerTest.prototype.it_contains_text = function() {
     this.assertEqual('foo', this.lexer.text);
 };
 
+// REQ-ID: LEXER_1
+// TEST-ID: 3
 LexerTest.prototype.it_has_a_position_within_the_text_start_at_0 = function() {
     this.assertEqual(0, this.lexer.pos);
 };
 
+// REQ-ID: LEXER_1
+// TEST-ID: 4
 LexerTest.prototype.it_has_a_character_starting_at_the_first_character_in_the_text = function() {
     this.assertEqual('f', this.lexer.char);
 };
 
+// REQ-ID: LEXER_2
+// TEST-ID: 5
 LexerTest.prototype.it_has_a_finite_list_of_available_token_types = function() {
     this.assertEqual('EOF', tokenTypes.EOF);
     this.assertEqual('RELATION', tokenTypes.RELATION);
@@ -62,6 +72,8 @@ LexerTest.prototype.it_has_a_finite_list_of_available_token_types = function() {
     this.assertEqual('LEQ', tokenTypes.LEQ);
 };
 
+// REQ-ID: LEXER_3
+// TEST-ID: 6
 LexerTest.prototype.it_can_consume_incrementing_the_position_and_getting_the_next_character = function() {
     this.assertEqual(0, this.lexer.pos);
     this.assertEqual('f', this.lexer.char);
@@ -70,6 +82,8 @@ LexerTest.prototype.it_can_consume_incrementing_the_position_and_getting_the_nex
     this.assertEqual('o', this.lexer.char);
 };
 
+// REQ-ID: LEXER_3
+// TEST-ID: 7
 LexerTest.prototype.it_sets_the_character_to_null_if_there_is_nothing_else_to_consume = function() {
     this.lexer = new Lexer('z');
     this.assertNotNull(this.lexer.char);
@@ -77,7 +91,9 @@ LexerTest.prototype.it_sets_the_character_to_null_if_there_is_nothing_else_to_co
     this.assertNull(this.lexer.char);
 };
 
-LexerTest.prototype.it_returns_an_EOF_token_when_coming_at_the_end_of_input = function() {
+// REQ-ID: LEXER_3
+// TEST-ID: 8
+LexerTest.prototype.it_returns_an_EOF_token_when_it_comes_to_the_end_of_the_input = function() {
     this.lexer = new Lexer('x');
 
     this.lexer.consume();
@@ -85,6 +101,8 @@ LexerTest.prototype.it_returns_an_EOF_token_when_coming_at_the_end_of_input = fu
     this.assertEqual('<EOF, null>', token.toString());
 };
 
+// REQ-ID: LEXER_4
+// TEST-ID: 9
 LexerTest.prototype.it_can_eat_the_white_space_between_characters = function() {
     this.lexer = new Lexer('a   b \t c \n d \r e');
 
@@ -112,6 +130,8 @@ LexerTest.prototype.it_can_eat_the_white_space_between_characters = function() {
     this.assertEqual(16, this.lexer.pos);
 };
 
+// REQ-ID: LEXER_5
+// TEST-ID: 10
 LexerTest.prototype.it_can_parse_a_ID_of_alpha_numeric_chars_and_underscores_not_starting_with_a_digit = function() {
     this.lexer = new Lexer('foo._bAR12(B__A_Z_\tQ_1_u_2_X_3;n0rF___');
 
@@ -136,6 +156,8 @@ LexerTest.prototype.it_can_parse_a_ID_of_alpha_numeric_chars_and_underscores_not
     this.lexer.consume();
 };
 
+// REQ-ID: LEXER_6
+// TEST-ID: 11
 LexerTest.prototype.it_can_parse_a_NUMBER_made_of_digits_not_starting_with_0 = function() {
     this.lexer = new Lexer('12a3456\r789!987654321012345');
 
@@ -155,6 +177,8 @@ LexerTest.prototype.it_can_parse_a_NUMBER_made_of_digits_not_starting_with_0 = f
     this.assertEqual('<NUMBER, 987654321012345>', token.toString());
 };
 
+// REQ-ID: LEXER_7
+// TEST-ID: 12
 LexerTest.prototype.it_can_parse_a_string_between_two_double_quotes = function() {
     this.lexer = new Lexer('"`~!@#$%^&*()[]{}<>/,._-+=| 123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"');
 
@@ -163,12 +187,16 @@ LexerTest.prototype.it_can_parse_a_string_between_two_double_quotes = function()
         token.toString());
 };
 
+// REQ-ID: LEXER_7
+// TEST-ID: 12
 LexerTest.prototype.it_throws_an_error_when_parsing_an_unclosed_string = function() {
     this.lexer = new Lexer('"unclosed');
     this.expectError(function() { this.nextToken(); }.bind(this.lexer), 
         'String starting at position 0 is not closed');
 };
 
+// REQ-ID: LEXER_8
+// TEST-ID: 13
 LexerTest.prototype.it_can_parse_left_and_right_parens_and_brackets_as_tokens = function() {
     this.lexer = new Lexer('()[]');
 
@@ -185,6 +213,8 @@ LexerTest.prototype.it_can_parse_left_and_right_parens_and_brackets_as_tokens = 
     this.assertEqual('<], null>', token.toString());
 };
 
+// REQ-ID: LEXER_9
+// TEST-ID: 14
 LexerTest.prototype.it_can_parse_commas_and_periods_as_tokens = function() {
     this.lexer = new Lexer('.,.,');
 
@@ -201,7 +231,9 @@ LexerTest.prototype.it_can_parse_commas_and_periods_as_tokens = function() {
     this.assertEqual('<COMMA, null>', token.toString());
 };
 
-LexerTest.prototype.it_can_parse_set_operators_as_tokens = function() {
+// REQ-ID: LEXER_10
+// TEST-ID: 15
+LexerTest.prototype.it_can_parse_special_symbol_operators_as_tokens = function() {
     this.lexer = new Lexer('⨝σΠπρ∪∩−×∧∨¬-!!=>>=≥=≠<<=≤');
 
     var token = this.lexer.nextToken();
@@ -274,13 +306,21 @@ LexerTest.prototype.it_can_parse_set_operators_as_tokens = function() {
     this.assertEqual('<LEQ, null>', token.toString());
 };
 
+// REQ-ID: LEXER_6
+// TEST-ID: 16
 LexerTest.prototype.it_throws_an_error_for_tokens_starting_with_a_zero = function() {
     this.lexer = new Lexer('0a123');
+
     this.expectError(function() { this.nextToken(); }.bind(this.lexer),
         'Invalid character: 0 at position 0');
 };
 
-LexerTest.prototype.it_errors = function() {
+// REQ-ID: LEXER_11
+// TEST-ID: 17
+LexerTest.prototype.it_throws_an_error_for_any_unrecognized_character_starting_a_token = function() {
     this.lexer = new Lexer('%');
+
+    this.expectError(function() { this.nextToken(); }.bind(this.lexer),
+        'Invalid character: % at position 0');
 };
 

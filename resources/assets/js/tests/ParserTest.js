@@ -14,10 +14,14 @@ ParserTest.prototype.setUp = function() {
     this.parser = new Parser(this.lexer);
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 1
 ParserTest.prototype.it_is_a_Parser = function() {
     this.assertTrue(this.parser instanceof Parser);
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 2
 ParserTest.prototype.it_can_consume_the_current_token_and_get_the_next_one = function() {
     this.assertEqual('<SELECT, null>', this.parser.lookahead.toString());
     this.parser.consume();
@@ -38,6 +42,8 @@ ParserTest.prototype.it_can_consume_the_current_token_and_get_the_next_one = fun
     this.assertEqual('<), null>', this.parser.lookahead.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 3
 ParserTest.prototype.it_can_match_the_lookahead_token_to_a_token_type_which_consumes_the_current_token_if_they_match = function() {
     this.assertEqual(tokenTypes.SELECT, this.parser.lookahead.type);
     this.parser.match(tokenTypes.SELECT);
@@ -61,6 +67,8 @@ ParserTest.prototype.it_can_match_the_lookahead_token_to_a_token_type_which_cons
     this.parser.match(tokenTypes.EOF);
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 4
 ParserTest.prototype.it_throws_an_error_and_does_not_consume_when_tokens_do_not_match = function() {
     this.assertEqual(tokenTypes.SELECT, this.parser.lookahead.type);
     this.expectError(function() { this.match(tokenTypes.PROJECT); }.bind(this.parser),
@@ -68,6 +76,8 @@ ParserTest.prototype.it_throws_an_error_and_does_not_consume_when_tokens_do_not_
     this.assertEqual(tokenTypes.SELECT, this.parser.lookahead.type);
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 5
 ParserTest.prototype.it_can_parse_a_positive_number = function() {
     this.parser = new Parser(new Lexer('452'));
     var actual = this.parser.number();
@@ -76,6 +86,8 @@ ParserTest.prototype.it_can_parse_a_positive_number = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 6
 ParserTest.prototype.it_can_parse_a_negative_number = function() {
     this.parser = new Parser(new Lexer('-13'));
     var actual = this.parser.number();
@@ -85,6 +97,8 @@ ParserTest.prototype.it_can_parse_a_negative_number = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());     
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 7
 ParserTest.prototype.it_can_parse_an_attribute_as_an_id = function() {
     this.parser = new Parser(new Lexer('table1'));
     var actual = this.parser.attribute();
@@ -94,6 +108,8 @@ ParserTest.prototype.it_can_parse_an_attribute_as_an_id = function() {
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 8
 ParserTest.prototype.it_can_parse_an_attribute_as_a_fully_qualified_name = function() {
     this.parser = new Parser(new Lexer('table1.attribute1'));
     var actual = this.parser.attribute();
@@ -104,6 +120,8 @@ ParserTest.prototype.it_can_parse_an_attribute_as_a_fully_qualified_name = funct
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 9
 ParserTest.prototype.it_can_parse_a_list_of_comma_separated_attributes = function() {
     this.parser = new Parser(new Lexer('a1, t1.a2, t3.a4'));
     var actual = this.parser.attributes();
@@ -121,6 +139,8 @@ ParserTest.prototype.it_can_parse_a_list_of_comma_separated_attributes = functio
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 10
 ParserTest.prototype.it_can_parse_a_string = function() {
     this.parser = new Parser(new Lexer('"123this_is_A_STr1ng!"'));
     var actual = this.parser.string();
@@ -130,6 +150,8 @@ ParserTest.prototype.it_can_parse_a_string = function() {
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 11
 ParserTest.prototype.it_can_parse_an_attribute_as_a_comparable_value = function() {
     this.parser = new Parser(new Lexer('foo1'));
     var actual = this.parser.comparable();
@@ -138,6 +160,8 @@ ParserTest.prototype.it_can_parse_an_attribute_as_a_comparable_value = function(
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 12
 ParserTest.prototype.it_can_parse_a_fully_qualified_attribute_as_a_comparable_value = function() {
     this.parser = new Parser(new Lexer('foo1.bar2'));
     var actual = this.parser.comparable();
@@ -148,6 +172,8 @@ ParserTest.prototype.it_can_parse_a_fully_qualified_attribute_as_a_comparable_va
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 13
 ParserTest.prototype.it_can_parse_a_number_as_a_comparable_value = function() {
     this.parser = new Parser(new Lexer('24612'));
     var actual = this.parser.comparable();
@@ -157,6 +183,8 @@ ParserTest.prototype.it_can_parse_a_number_as_a_comparable_value = function() {
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 14
 ParserTest.prototype.it_can_parse_a_negative_number_as_a_comparable_value = function() {
     this.parser = new Parser(new Lexer('-1442'));
     var actual = this.parser.comparable();
@@ -166,6 +194,8 @@ ParserTest.prototype.it_can_parse_a_negative_number_as_a_comparable_value = func
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 15
 ParserTest.prototype.it_can_parse_a_string_as_a_comparable_value = function() {
     this.parser = new Parser(new Lexer('"#@!@str1ng_!#"'));
     var actual = this.parser.comparable();
@@ -174,12 +204,16 @@ ParserTest.prototype.it_can_parse_a_string_as_a_comparable_value = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 16
 ParserTest.prototype.it_throws_an_error_when_a_comparable_value_is_not_an_attribute_or_string_or_number = function() {
     this.parser = new Parser(new Lexer('(val)'));
     this.expectError(function() { this.comparable(); }.bind(this.parser), 
         'Expected comparable value, but found <(, null>');
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 17
 ParserTest.prototype.it_can_parse_less_than_as_a_comparison_operator = function() {
     this.parser = new Parser(new Lexer('<'));
     var actual = this.parser.compareOp();
@@ -189,6 +223,8 @@ ParserTest.prototype.it_can_parse_less_than_as_a_comparison_operator = function(
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 18
 ParserTest.prototype.it_can_parse_less_than_or_equal_to_as_a_comparison_operator = function() {
     this.parser = new Parser(new Lexer('<=≤'));
     var actual = this.parser.compareOp();
@@ -203,6 +239,8 @@ ParserTest.prototype.it_can_parse_less_than_or_equal_to_as_a_comparison_operator
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 19
 ParserTest.prototype.it_can_parse_greater_than_as_a_comparison_operator = function() {
     this.parser = new Parser(new Lexer('>'));
     var actual = this.parser.compareOp();
@@ -212,6 +250,8 @@ ParserTest.prototype.it_can_parse_greater_than_as_a_comparison_operator = functi
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 20
 ParserTest.prototype.it_can_parse_greater_than_or_equal_to_as_a_comparison_operator = function() {
     this.parser = new Parser(new Lexer('>=≥'));
     var actual = this.parser.compareOp();
@@ -226,6 +266,8 @@ ParserTest.prototype.it_can_parse_greater_than_or_equal_to_as_a_comparison_opera
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 21
 ParserTest.prototype.it_can_parse_equal_to_as_a_comparison_operator = function() {
     this.parser = new Parser(new Lexer('='));
     var actual = this.parser.compareOp();
@@ -235,6 +277,8 @@ ParserTest.prototype.it_can_parse_equal_to_as_a_comparison_operator = function()
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 22
 ParserTest.prototype.it_can_parse_not_equal_to_as_a_comparison_operator = function() {
     this.parser = new Parser(new Lexer('!=≠'));
     var actual = this.parser.compareOp();
@@ -249,6 +293,8 @@ ParserTest.prototype.it_can_parse_not_equal_to_as_a_comparison_operator = functi
     this.assertEqual(expected.toString(), actual.toString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 23
 ParserTest.prototype.it_can_parse_a_comparison = function() {
     this.parser = new Parser(new Lexer('t1.attr1 = "foo bar baz"'));
     var actual = this.parser.comparison();
@@ -262,6 +308,8 @@ ParserTest.prototype.it_can_parse_a_comparison = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 24
 ParserTest.prototype.it_can_parse_a_comparison_as_an_operand = function() {
     this.parser = new Parser(new Lexer('foo != 223'));
     var actual = this.parser.operand();
@@ -272,6 +320,8 @@ ParserTest.prototype.it_can_parse_a_comparison_as_an_operand = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 25
 ParserTest.prototype.it_can_parse_an_operand_inside_of_parens = function() {
     this.parser = new Parser(new Lexer('(t2.bar >= t3.baz)'));
     var actual = this.parser.operand();
@@ -288,6 +338,8 @@ ParserTest.prototype.it_can_parse_an_operand_inside_of_parens = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 26
 ParserTest.prototype.it_can_parse_a_negated_operand = function() {
     this.parser = new Parser(new Lexer('!(t2.bar >= t3.baz)'));
     var actual = this.parser.operand();
@@ -306,6 +358,8 @@ ParserTest.prototype.it_can_parse_a_negated_operand = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 27
 ParserTest.prototype.it_can_parse_a_conjunction_of_operands = function() {
     this.parser = new Parser(new Lexer('a = 24 ∧ b > 15'));
     var actual = this.parser.conjunction();
@@ -322,6 +376,8 @@ ParserTest.prototype.it_can_parse_a_conjunction_of_operands = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 28
 ParserTest.prototype.it_parses_a_conjunction_with_left_associativity = function() {
     this.parser = new Parser(new Lexer('a = 1 ∧ b = 2 ∧ c = 3'));
     var actual = this.parser.conjunction();
@@ -344,6 +400,8 @@ ParserTest.prototype.it_parses_a_conjunction_with_left_associativity = function(
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 29
 ParserTest.prototype.it_can_parse_a_disjunction_of_conjunctions = function() {
     this.parser = new Parser(new Lexer('a = 1 ∧ b = 2 ∨ c = 3 ∧ d = 4'));
     var actual = this.parser.disjunction();
@@ -372,6 +430,8 @@ ParserTest.prototype.it_can_parse_a_disjunction_of_conjunctions = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 30
 ParserTest.prototype.it_parses_a_disjunction_with_left_associativity = function() {
     this.parser = new Parser(new Lexer('a = 1 ∨ b = 2 ∨ c = 3'));
     var actual = this.parser.disjunction();
@@ -394,6 +454,8 @@ ParserTest.prototype.it_parses_a_disjunction_with_left_associativity = function(
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 31
 ParserTest.prototype.it_can_change_precedence_of_predicate_operations_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('a = 1 ∧ (b = 2 ∨ c = 3)'));
     var actual = this.parser.disjunction();
@@ -416,6 +478,8 @@ ParserTest.prototype.it_can_change_precedence_of_predicate_operations_with_paren
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 32
 ParserTest.prototype.it_can_change_associativity_of_predicate_operations_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('a = 1 ∨ (b = 2 ∨ c = 3)'));
     var actual = this.parser.disjunction();
@@ -438,6 +502,8 @@ ParserTest.prototype.it_can_change_associativity_of_predicate_operations_with_pa
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 33
 ParserTest.prototype.it_can_parse_an_id_as_a_relation = function() {
     this.parser = new Parser(new Lexer('table1'));
     var actual = this.parser.relation();
@@ -446,6 +512,8 @@ ParserTest.prototype.it_can_parse_an_id_as_a_relation = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 34
 ParserTest.prototype.it_can_parse_a_parenthesized_relation = function() {
     this.parser = new Parser(new Lexer('(table2)'));
     var actual = this.parser.relation();
@@ -454,6 +522,8 @@ ParserTest.prototype.it_can_parse_a_parenthesized_relation = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 35
 ParserTest.prototype.it_can_parse_a_project_statement_as_a_relation = function() {
     this.parser = new Parser(new Lexer('Π a1, t1.a2, a3 (t1)'));
     var actual = this.parser.relation();
@@ -471,6 +541,8 @@ ParserTest.prototype.it_can_parse_a_project_statement_as_a_relation = function()
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 36
 ParserTest.prototype.it_can_parse_a_select_statement_as_a_relation = function() {
     this.parser = new Parser(new Lexer('σ a > 24 (t1)'));
     var actual = this.parser.relation();
@@ -484,6 +556,8 @@ ParserTest.prototype.it_can_parse_a_select_statement_as_a_relation = function() 
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 37
 ParserTest.prototype.it_can_parse_a_rename_statement_with_no_attributes_as_a_relation = function() {
     this.parser = new Parser(new Lexer('ρ foo (t1)'));
     var actual = this.parser.relation();
@@ -494,6 +568,8 @@ ParserTest.prototype.it_can_parse_a_rename_statement_with_no_attributes_as_a_rel
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 38
 ParserTest.prototype.it_can_parse_a_rename_statement_with_a_list_of_attributes_as_a_relation = function() {
     this.parser = new Parser(new Lexer('ρ bar [b1, b2, b3] (t1)'));
     var actual = this.parser.relation();
@@ -509,18 +585,24 @@ ParserTest.prototype.it_can_parse_a_rename_statement_with_a_list_of_attributes_a
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 39
 ParserTest.prototype.it_throws_an_error_when_a_rename_statement_has_an_empty_attributes_list = function() {
     this.parser = new Parser(new Lexer('ρ bar [] (t1)'));
     this.expectError(function() { this.relation(); }.bind(this.parser), 
         `Type mismatch; Expecting ID but found ]`);
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 40
 ParserTest.prototype.it_throws_an_error_when_a_relation_is_not_of_a_valid_type = function() {
     this.parser = new Parser(new Lexer('∪'));
     this.expectError(function() { this.relation(); }.bind(this.parser),
         `Expected start of relation but found UNION`);
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 41
 ParserTest.prototype.it_can_parse_a_cartesian_product = function() {
     this.parser = new Parser(new Lexer('r1 × r2'));
     var actual = this.parser.cartesianProduct();
@@ -531,6 +613,8 @@ ParserTest.prototype.it_can_parse_a_cartesian_product = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 42
 ParserTest.prototype.it_parses_cartesian_product_with_left_associativity = function() {
     this.parser = new Parser(new Lexer('r1 × r2 × r3'));
     var actual = this.parser.cartesianProduct();
@@ -544,6 +628,8 @@ ParserTest.prototype.it_parses_cartesian_product_with_left_associativity = funct
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 43
 ParserTest.prototype.it_can_change_associativity_of_cartesian_product_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('r1 × (r2 × r3)'));
     var actual = this.parser.cartesianProduct();
@@ -557,6 +643,8 @@ ParserTest.prototype.it_can_change_associativity_of_cartesian_product_with_paren
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 44
 ParserTest.prototype.it_can_parse_a_join = function() {
     this.parser = new Parser(new Lexer('r1 ⨝ r2')); // join symbol
     var actual = this.parser.join();
@@ -567,6 +655,8 @@ ParserTest.prototype.it_can_parse_a_join = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 45
 ParserTest.prototype.it_parses_join_with_left_associativity = function() {
     this.parser = new Parser(new Lexer('r1 ⨝ r2 ⨝ r3'));
     var actual = this.parser.join();
@@ -580,6 +670,8 @@ ParserTest.prototype.it_parses_join_with_left_associativity = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 46
 ParserTest.prototype.it_can_change_associativity_of_join_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('r1 ⨝ (r2 ⨝ r3)'));
     var actual = this.parser.join();
@@ -593,6 +685,8 @@ ParserTest.prototype.it_can_change_associativity_of_join_with_parenthesization =
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 47
 ParserTest.prototype.it_can_parse_difference = function() {
     this.parser = new Parser(new Lexer('r1 − r2')); 
     var actual = this.parser.difference();
@@ -603,6 +697,8 @@ ParserTest.prototype.it_can_parse_difference = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 48
 ParserTest.prototype.it_parses_difference_with_left_associativity = function() {
     this.parser = new Parser(new Lexer('r1 − r2 − r3'));
     var actual = this.parser.difference();
@@ -616,6 +712,8 @@ ParserTest.prototype.it_parses_difference_with_left_associativity = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 49
 ParserTest.prototype.it_can_change_associativity_of_difference_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('r1 − (r2 − r3)'));
     var actual = this.parser.difference();
@@ -629,6 +727,8 @@ ParserTest.prototype.it_can_change_associativity_of_difference_with_parenthesiza
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 50
 ParserTest.prototype.it_can_parse_union = function() {
     this.parser = new Parser(new Lexer('r1 ∪ r2')); 
     var actual = this.parser.unionIntersection();
@@ -639,6 +739,8 @@ ParserTest.prototype.it_can_parse_union = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 51
 ParserTest.prototype.it_parses_union_with_left_associativity = function() {
     this.parser = new Parser(new Lexer('r1 ∪ r2 ∪ r3'));
     var actual = this.parser.unionIntersection();
@@ -652,6 +754,8 @@ ParserTest.prototype.it_parses_union_with_left_associativity = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 52
 ParserTest.prototype.it_can_change_associativity_of_union_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('r1 ∪ (r2 ∪ r3)'));
     var actual = this.parser.unionIntersection();
@@ -665,6 +769,8 @@ ParserTest.prototype.it_can_change_associativity_of_union_with_parenthesization 
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 53
 ParserTest.prototype.it_can_parse_intersection = function() {
     this.parser = new Parser(new Lexer('r1 ∩ r2')); 
     var actual = this.parser.unionIntersection();
@@ -675,6 +781,8 @@ ParserTest.prototype.it_can_parse_intersection = function() {
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 54
 ParserTest.prototype.it_parses_intersection_with_left_associativity = function() {
     this.parser = new Parser(new Lexer('r1 ∩ r2 ∩ r3'));
     var actual = this.parser.unionIntersection();
@@ -688,6 +796,8 @@ ParserTest.prototype.it_parses_intersection_with_left_associativity = function()
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 55
 ParserTest.prototype.it_can_change_associativity_of_intersection_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('r1 ∩ (r2 ∩ r3)'));
     var actual = this.parser.unionIntersection();
@@ -701,6 +811,8 @@ ParserTest.prototype.it_can_change_associativity_of_intersection_with_parenthesi
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 56
 ParserTest.prototype.it_parses_union_and_intersection_with_the_same_precedence = function() {
     this.parser = new Parser(new Lexer('r1 ∪ r2 ∩ r3'));
     var actual = this.parser.unionIntersection();
@@ -725,6 +837,8 @@ ParserTest.prototype.it_parses_union_and_intersection_with_the_same_precedence =
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 57
 ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = function() {
     this.parser = new Parser(new Lexer('r1 ∪ r2 ∩ r3 − r4 ⨝ r5 × r6'));
     var actual = this.parser.unionIntersection();
@@ -767,6 +881,8 @@ ParserTest.prototype.it_maintains_precedence_of_relation_set_operations = functi
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 58
 ParserTest.prototype.it_can_change_precedence_of_set_operations_with_parenthesization = function() {
     this.parser = new Parser(new Lexer('(((((r1 ∪ r2) ∩ r3) − r4) ⨝ r5) × r6)'));
     var actual = this.parser.unionIntersection();
@@ -789,6 +905,8 @@ ParserTest.prototype.it_can_change_precedence_of_set_operations_with_parenthesiz
     this.assertEqual(expected.toTreeString(), actual.toTreeString());
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 59
 ParserTest.prototype.it_throws_an_error_if_parser_is_done_but_there_is_more_input = function() {
     this.parser = new Parser(new Lexer('r1 r2'));
 
@@ -796,6 +914,14 @@ ParserTest.prototype.it_throws_an_error_if_parser_is_done_but_there_is_more_inpu
         'Expected end of input, but found ID.');
 };
 
+// REQ-ID: PARSER_
+// TEST-ID: 60
+ParserTest.prototype.it_produces_an_Ast_when_it_parses = function() {
+    this.parser = new Parser(new Lexer('r1'));
+    var actual = this.parser.parse();
+
+    this.assertTrue(actual instanceof Ast);
+};
 
 
 

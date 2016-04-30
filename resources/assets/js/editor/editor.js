@@ -11,6 +11,12 @@ import { Visitor as EvalVisitor } from '../language/visitors/EvalVisitor';
 import { Visitor as RelationTreeVisitor } from '../language/visitors/RelationTreeVisitor';
 
 export function init(data) {
+    
+    Object.keys(data).forEach(key => {
+        var name = key;
+        var relation = data[key];
+        table.update(key, relation.qualifiedAttributes(), relation.tuples, '#dataSet');
+    });
 
     $('.Editor__button').click(e => {
         var input = e.currentTarget.innerHTML;

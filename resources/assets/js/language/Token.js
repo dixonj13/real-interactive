@@ -3,7 +3,7 @@ class Token {
 
     /**
      * Creates a new token with the given type and value.
-     * @param  {number} type  The type of the token.
+     * @param  {string} type  The type of the token.
      * @param  {string} value The value of the token.
      * @return {null}       
      */

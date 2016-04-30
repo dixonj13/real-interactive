@@ -84,11 +84,6 @@ var data = {
 
 editor.init(data);
 
-Object.keys(data).forEach(key =>    {
-    var name = key;
-    var relation = data[key];
-    table.update(key, relation.qualifiedAttributes(), relation.tuples, '#dataSet');
-});
 
 
 

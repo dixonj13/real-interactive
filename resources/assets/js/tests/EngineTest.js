@@ -2,6 +2,7 @@ import { Engine } from '../query_tools/Engine';
 import { TestCase } from './TestCase';
 import { Relation } from '../query_tools/Relation';
 
+/** Tests the Engine class. */
 export var EngineTest = function() {};
 
 EngineTest.prototype = new TestCase();
@@ -40,6 +41,8 @@ EngineTest.prototype.setUp = function() {
     });
 };
 
+// REQ-ID: ENGINE_1
+// TEST-ID: 1
 EngineTest.prototype.it_can_look_up_a_relation_in_the_data_set = function() {
     var actual = this.engine.lookup('lists');
     var expected = new Relation(
@@ -59,11 +62,15 @@ EngineTest.prototype.it_can_look_up_a_relation_in_the_data_set = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_1
+// TEST-ID: 2
 EngineTest.prototype.it_throws_an_error_if_it_cannot_find_a_relation = function() {
     this.expectError(function() { this.lookup('bookmarks'); }.bind(this.engine),
         'Relation bookmarks does not exist.');
 };
 
+// REQ-ID: ENGINE_2
+// TEST-ID: 3
 EngineTest.prototype.it_can_perform_a_projection_with_no_qualifiers = function() {
     var movies = this.engine.dataSet.movies;
     var actual = this.engine.project(movies, [{ attribute: 'title' }]);
@@ -83,6 +90,8 @@ EngineTest.prototype.it_can_perform_a_projection_with_no_qualifiers = function()
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_2
+// TEST-ID: 4
 EngineTest.prototype.it_can_perform_a_projection_with_qualifiers = function() {
     var bookmarks = new Relation(
         [
@@ -110,6 +119,8 @@ EngineTest.prototype.it_can_perform_a_projection_with_qualifiers = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_2
+// TEST-ID: 5
 EngineTest.prototype.it_throws_an_error_if_a_projection_is_ambiguous = function() {
     var bookmarks = new Relation(
         [
@@ -128,24 +139,32 @@ EngineTest.prototype.it_throws_an_error_if_a_projection_is_ambiguous = function(
     }.bind(this.engine), 'id is ambiguous.');
 };
 
+// REQ-ID: ENGINE_2
+// TEST-ID: 6
 EngineTest.prototype.it_throws_an_error_when_projecting_if_an_unqualified_attribute_does_not_exist = function() {
     this.expectError(function() { 
         this.project(this.dataSet.movies, [{ attribute: 'url' }]); 
     }.bind(this.engine), 'url does not exist.');
 };
 
+// REQ-ID: ENGINE_2
+// TEST-ID: 7
 EngineTest.prototype.it_throws_an_error_when_projecting_if_a_qualified_attribute_does_not_exist = function() {
     this.expectError(function() { 
         this.project(this.dataSet.movies, [{ attribute: 'url', 'qualifier': 'movies' }]); 
     }.bind(this.engine), 'movies.url does not exist.');
 };
 
+// REQ-ID: ENGINE_2
+// TEST-ID: 8
 EngineTest.prototype.it_throws_an_error_when_projecting_if_a_qualifier_does_not_exist = function() {
     this.expectError(function() { 
         this.project(this.dataSet.movies, [{ attribute: 'id', 'qualifier': 'lists' }]); 
     }.bind(this.engine), 'lists.id does not exist.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 9
 EngineTest.prototype.it_can_perform_a_selection_using_equals = function() {
     var predicate = { lhs: 4, op: '==', rhs: 4 };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -167,6 +186,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_equals = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 10
 EngineTest.prototype.it_can_perform_a_selection_using_not_equals = function() {
     var predicate = { lhs: 4, op: '!=', rhs: 2 };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -188,6 +209,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_not_equals = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 11
 EngineTest.prototype.it_can_perform_a_selection_using_greater_than = function() {
     var predicate = { lhs: 4, op: '>', rhs: 2 };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -209,6 +232,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_greater_than = function() 
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 12
 EngineTest.prototype.it_can_perform_a_selection_using_greater_than_or_equal_to = function() {
     var predicate = { lhs: 4, op: '>=', rhs: 4 };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -230,6 +255,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_greater_than_or_equal_to =
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 13
 EngineTest.prototype.it_can_perform_a_selection_using_less_than = function() {
     var predicate = { lhs: 2, op: '<', rhs: 4 };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -251,6 +278,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_less_than = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 14
 EngineTest.prototype.it_can_perform_a_selection_using_less_than_or_equal_to = function() {
     var predicate = { lhs: 4, op: '<=', rhs: 4 };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -272,6 +301,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_less_than_or_equal_to = fu
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 15
 EngineTest.prototype.it_can_perform_a_selection_using_two_numbers = function() {
     var predicate = { lhs: 881241, op: '>', rhs: 121123 };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -293,6 +324,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_two_numbers = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 16
 EngineTest.prototype.it_can_perform_a_selection_using_two_strings = function() {
     var predicate = { lhs: 'hello', op: '!=', rhs: 'goodbye' };
     var actual = this.engine.select(this.engine.dataSet.movies, predicate);
@@ -314,6 +347,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_two_strings = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 17
 EngineTest.prototype.it_can_perform_a_selection_using_attributes = function() {
     var predicate = { 
         lhs: { attribute: 'id' },
@@ -339,6 +374,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_attributes = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 18
 EngineTest.prototype.it_can_perform_a_selection_using_an_attribute_of_type_string_and_a_string = function() {
     var predicate = { 
         lhs: { attribute: 'title', 'qualifier': 'movies' },
@@ -360,6 +397,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_an_attribute_of_type_strin
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 19
 EngineTest.prototype.it_can_perform_a_selection_using_an_attribute_of_type_number_and_a_number = function() {
     var predicate = { 
         lhs: 2007,
@@ -381,6 +420,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_an_attribute_of_type_numbe
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 20
 EngineTest.prototype.it_throws_an_error_if_two_attributes_do_not_have_the_same_type = function() {
     var predicate = { 
         lhs: { attribute: 'title' },
@@ -393,6 +434,8 @@ EngineTest.prototype.it_throws_an_error_if_two_attributes_do_not_have_the_same_t
         'movies.title of type string cannot be compared with movies.year of type number.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 21
 EngineTest.prototype.it_throws_an_error_if_a_string_is_compared_with_a_number = function() {
     var predicate = { 
         lhs: 4,
@@ -405,6 +448,8 @@ EngineTest.prototype.it_throws_an_error_if_a_string_is_compared_with_a_number = 
         '4 of type number cannot be compared with foo of type string.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 22
 EngineTest.prototype.it_throws_an_error_if_an_attribute_of_type_string_is_compared_with_a_number = function() {
     var predicate = { 
         lhs: { attribute: 'title' },
@@ -417,6 +462,8 @@ EngineTest.prototype.it_throws_an_error_if_an_attribute_of_type_string_is_compar
         'movies.title of type string cannot be compared with 4 of type number.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 23
 EngineTest.prototype.it_throws_an_error_if_an_attribute_of_type_number_is_compared_with_a_string = function() {
     var predicate = { 
         lhs: { attribute: 'year' },
@@ -429,6 +476,8 @@ EngineTest.prototype.it_throws_an_error_if_an_attribute_of_type_number_is_compar
         'movies.year of type number cannot be compared with 2004 of type string.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 24
 EngineTest.prototype.it_can_perform_a_selection_using_AND = function() {
     var predicate = { 
         lhs: {
@@ -458,6 +507,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_AND = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 25
 EngineTest.prototype.it_can_perform_a_selection_using_OR = function() {
     var predicate = { 
         lhs: {
@@ -489,6 +540,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_OR = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 26
 EngineTest.prototype.it_can_perform_a_selection_using_NOT = function() {
     var predicate = { 
         lhs: {
@@ -516,6 +569,8 @@ EngineTest.prototype.it_can_perform_a_selection_using_NOT = function() {
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 27
 EngineTest.prototype.it_throws_an_error_if_a_selection_is_ambiguous = function() {
     var bookmarks = new Relation(
         [
@@ -539,6 +594,8 @@ EngineTest.prototype.it_throws_an_error_if_a_selection_is_ambiguous = function()
     }.bind(this.engine), 'id is ambiguous.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 28
 EngineTest.prototype.it_throws_an_error_when_selecting_if_an_unqualified_attribute_does_not_exist = function() {
     var projection = { 
         lhs: { attribute: 'url' },
@@ -551,6 +608,8 @@ EngineTest.prototype.it_throws_an_error_when_selecting_if_an_unqualified_attribu
     }.bind(this.engine), 'url does not exist.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 29
 EngineTest.prototype.it_throws_an_error_when_selecting_if_a_qualified_attribute_does_not_exist = function() {
     var projection = { 
         lhs: { attribute: 'url', qualifier: 'movies' },
@@ -563,6 +622,8 @@ EngineTest.prototype.it_throws_an_error_when_selecting_if_a_qualified_attribute_
     }.bind(this.engine), 'movies.url does not exist.');
 };
 
+// REQ-ID: ENGINE_3
+// TEST-ID: 30
 EngineTest.prototype.it_throws_an_error_when_selecting_if_a_qualifier_does_not_exist = function() {
     var projection = { 
         lhs: { attribute: 'id', qualifier: 'lists' },
@@ -575,6 +636,8 @@ EngineTest.prototype.it_throws_an_error_when_selecting_if_a_qualifier_does_not_e
     }.bind(this.engine), 'lists.id does not exist.');
 };
 
+// REQ-ID: ENGINE_4
+// TEST-ID: 31
 EngineTest.prototype.it_can_perform_a_rename_on_a_relation_using_just_a_name = function() {
     var actual = this.engine.rename(this.engine.dataSet.movies, 'films', []);
     var expected = new Relation(
@@ -595,6 +658,8 @@ EngineTest.prototype.it_can_perform_a_rename_on_a_relation_using_just_a_name = f
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_4
+// TEST-ID: 32
 EngineTest.prototype.it_can_perform_a_rename_using_a_name_and_a_list_of_attributes = function() {
     var attributes = [
         { attribute: 'identifier' },
@@ -620,6 +685,8 @@ EngineTest.prototype.it_can_perform_a_rename_using_a_name_and_a_list_of_attribut
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_4
+// TEST-ID: 33
 EngineTest.prototype.it_can_perform_a_rename_using_a_name_and_a_list_of_potentially_qualified_attributes = function() {
     var attributes = [
         { attribute: 'identifier' },
@@ -645,7 +712,9 @@ EngineTest.prototype.it_can_perform_a_rename_using_a_name_and_a_list_of_potentia
     this.assertEqual(expected, actual);
 };
 
-EngineTest.prototype.it_throws_an_error_renaming_with_an_attribute_list_not_matching_the_number_of_attributes = function() {
+// REQ-ID: ENGINE_4
+// TEST-ID: 34
+EngineTest.prototype.it_throws_an_error_renaming_for_an_attribute_list_not_matching_the_actual_number_of_attributes = function() {
     var attributes = [
         { attribute: 'identifier' },
         { attribute: 'name' },
@@ -656,6 +725,8 @@ EngineTest.prototype.it_throws_an_error_renaming_with_an_attribute_list_not_matc
     }.bind(this.engine), 'Rename to films requires 3 attributes.');
 };
 
+// REQ-ID: ENGINE_4
+// TEST-ID: 35
 EngineTest.prototype.it_throws_an_error_renaming_with_an_attribute_list_that_contains_duplicates = function() {
     var attributes = [
         { attribute: 'identifier' },
@@ -668,6 +739,8 @@ EngineTest.prototype.it_throws_an_error_renaming_with_an_attribute_list_that_con
     }.bind(this.engine), 'Rename to films contains duplicate attribute names.');
 };
 
+// REQ-ID: ENGINE_4
+// TEST-ID: 36
 EngineTest.prototype.it_throws_an_error_if_renaming_without_an_attribute_list_would_be_ambiguous = function() {
     var bookmarks = new Relation(
         [
@@ -686,6 +759,8 @@ EngineTest.prototype.it_throws_an_error_if_renaming_without_an_attribute_list_wo
     }.bind(this.engine), 'Rename to favorites would be ambiguous.');
 };
 
+// REQ-ID: ENGINE_5
+// TEST-ID: 37
 EngineTest.prototype.it_can_perform_a_union_of_two_relations_with_the_same_arity = function() {
     var relation2 = new Relation(
         [
@@ -720,7 +795,9 @@ EngineTest.prototype.it_can_perform_a_union_of_two_relations_with_the_same_arity
     this.assertEqual(expected, actual);
 };
 
-EngineTest.prototype.it_throws_an_exception_when_unioning_two_relations_with_a_difference_number_of_attributes = function() {
+// REQ-ID: ENGINE_5
+// TEST-ID: 38
+EngineTest.prototype.it_throws_an_exception_when_unioning_two_relations_with_a_different_number_of_attributes = function() {
     var relation2 = new Relation(
         [
             { 'attribute': 'fid', 'qualifier': 'films', 'type': 'number' },
@@ -738,6 +815,8 @@ EngineTest.prototype.it_throws_an_exception_when_unioning_two_relations_with_a_d
     }.bind(this.engine), 'Union cannot be performed due to incompatible arity.');
 };
 
+// REQ-ID: ENGINE_5
+// TEST-ID: 39
 EngineTest.prototype.it_throws_an_exception_when_unioning_two_relations_with_different_types = function() {
     var relation2 = new Relation(
         [
@@ -757,6 +836,8 @@ EngineTest.prototype.it_throws_an_exception_when_unioning_two_relations_with_dif
     }.bind(this.engine), 'Union cannot be performed due to incompatible arity.');
 };
 
+// REQ-ID: ENGINE_6
+// TEST-ID: 40
 EngineTest.prototype.it_can_take_the_intersection_of_two_relations_with_the_same_arity = function() {
     var relation2 = new Relation(
         [
@@ -785,7 +866,9 @@ EngineTest.prototype.it_can_take_the_intersection_of_two_relations_with_the_same
     this.assertEqual(expected, actual);
 };
 
-EngineTest.prototype.it_throws_an_exception_when_intersecting_two_relations_with_a_difference_number_of_attributes = function() {
+// REQ-ID: ENGINE_6
+// TEST-ID: 41
+EngineTest.prototype.it_throws_an_exception_when_intersecting_two_relations_with_a_different_number_of_attributes = function() {
     var relation2 = new Relation(
         [
             { 'attribute': 'fid', 'qualifier': 'films', 'type': 'number' },
@@ -803,6 +886,8 @@ EngineTest.prototype.it_throws_an_exception_when_intersecting_two_relations_with
     }.bind(this.engine), 'Intersection cannot be performed due to incompatible arity.');
 };
 
+// REQ-ID: ENGINE_6
+// TEST-ID: 42
 EngineTest.prototype.it_throws_an_exception_when_intersecting_two_relations_with_different_types = function() {
     var relation2 = new Relation(
         [
@@ -822,6 +907,8 @@ EngineTest.prototype.it_throws_an_exception_when_intersecting_two_relations_with
     }.bind(this.engine), 'Intersection cannot be performed due to incompatible arity.');
 };
 
+// REQ-ID: ENGINE_7
+// TEST-ID: 43
 EngineTest.prototype.it_can_take_the_difference_of_two_relations_with_the_same_arity = function() {
     var relation2 = new Relation(
         [
@@ -853,7 +940,9 @@ EngineTest.prototype.it_can_take_the_difference_of_two_relations_with_the_same_a
     this.assertEqual(expected, actual);
 };
 
-EngineTest.prototype.it_throws_an_exception_when_taking_the_difference_of_two_relations_with_a_difference_number_of_attributes = function() {
+// REQ-ID: ENGINE_7
+// TEST-ID: 44
+EngineTest.prototype.it_throws_an_exception_when_taking_the_difference_of_two_relations_with_a_different_number_of_attributes = function() {
     var relation2 = new Relation(
         [
             { 'attribute': 'fid', 'qualifier': 'films', 'type': 'number' },
@@ -871,6 +960,8 @@ EngineTest.prototype.it_throws_an_exception_when_taking_the_difference_of_two_re
     }.bind(this.engine), 'Difference cannot be performed due to incompatible arity.');
 };
 
+// REQ-ID: ENGINE_7
+// TEST-ID: 45
 EngineTest.prototype.it_throws_an_exception_when_taking_the_difference_of_two_relations_with_different_types = function() {
     var relation2 = new Relation(
         [
@@ -890,6 +981,8 @@ EngineTest.prototype.it_throws_an_exception_when_taking_the_difference_of_two_re
     }.bind(this.engine), 'Difference cannot be performed due to incompatible arity.');
 };
 
+// REQ-ID: ENGINE_8
+// TEST-ID: 46
 EngineTest.prototype.it_can_produce_the_cartesian_product_of_two_relations = function() {
     var relation2 = new Relation(
         [
@@ -927,6 +1020,8 @@ EngineTest.prototype.it_can_produce_the_cartesian_product_of_two_relations = fun
     this.assertEqual(expected, actual);
 };
 
+// REQ-ID: ENGINE_8
+// TEST-ID: 47
 EngineTest.prototype.it_throws_an_error_for_cartesian_product_if_the_relations_have_duplicate_attributes = function() {
     var relation2 = new Relation(
         [
@@ -944,6 +1039,8 @@ EngineTest.prototype.it_throws_an_error_for_cartesian_product_if_the_relations_h
     }.bind(this.engine), 'Cartesian product would produce ambiguous attribute names.');
 };
 
+// REQ-ID: ENGINE_9
+// TEST-ID: 48
 EngineTest.prototype.it_can_produce_the_natural_join_of_two_relations = function() {
     var relation2 = new Relation(
         [
